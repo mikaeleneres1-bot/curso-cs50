@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS50 — Curso Completo</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--red:#D85A30;--red-d:#993C1D;--blue:#185FA5;--green:#3B6D11;--amber:#854F0B;--purple:#533AB7;--teal:#0F6E56;--bg:#141310;--bg2:#1c1a17;--bg3:#232017;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);--t1:#f0ede6;--t2:#a8a49c;--t3:#5c5a55;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;--serif:'Lora',serif;}
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg);color:var(--t2);line-height:1.65;}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(20,19,16,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);height:50px;display:flex;align-items:center;padding:0 1.5rem;gap:1.5rem;}
+.nb{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--red);flex-shrink:0;}
+.ns{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;}
+.ns::-webkit-scrollbar{display:none;}
+.na{font-family:var(--mono);font-size:10px;color:var(--t3);padding:4px 9px;border-radius:4px;white-space:nowrap;text-decoration:none;transition:color .15s,background .15s;}
+.na:hover{color:var(--t1);background:rgba(255,255,255,0.05);}
+.hero{max-width:1100px;margin:0 auto;padding:88px 3rem 64px;display:grid;grid-template-columns:1fr 280px;gap:3.5rem;align-items:start;}
+.he{font-family:var(--mono);font-size:10px;color:var(--red);letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px;}
+.hero h1{font-size:44px;font-weight:300;line-height:1.08;letter-spacing:-1px;color:var(--t1);}
+.hero h1 em{font-style:normal;color:var(--red);font-weight:600;}
+.hs{margin-top:16px;font-size:14px;color:var(--t3);line-height:1.8;max-width:480px;}
+.hstats{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.hs2{padding:16px;border:1px solid var(--border);border-radius:8px;background:rgba(255,255,255,.012);}
+.sn{font-family:var(--mono);font-size:24px;font-weight:600;color:var(--red);}
+.sl{font-size:11px;color:var(--t3);margin-top:2px;}
+.page{max-width:1100px;margin:0 auto;padding:0 3rem;}
+hr.div{border:none;border-top:1px solid var(--border);}
+.sh{padding:44px 0 28px;}
+.st{font-family:var(--mono);font-size:10px;color:var(--red);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;}
+.si{font-size:26px;font-weight:300;color:var(--t1);letter-spacing:-.4px;}
+.ss{font-size:13px;color:var(--t3);margin-top:5px;line-height:1.7;}
+/* PILARES */
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:52px;}
+.pc{padding:20px;border:1px solid var(--border);border-radius:8px;background:var(--bg2);}
+.pn{font-family:var(--mono);font-size:20px;font-weight:600;color:rgba(216,90,48,.22);margin-bottom:10px;}
+.pc h3{font-size:13px;font-weight:500;color:var(--t1);margin-bottom:6px;}
+.pc p{font-size:12px;color:var(--t3);line-height:1.65;}
+.pcn{margin-top:8px;font-size:10px;color:var(--t3);font-family:var(--mono);padding:5px 9px;background:rgba(255,255,255,.025);border-radius:4px;}
+/* WEEKS */
+.weeks{display:flex;flex-direction:column;margin-bottom:60px;}
+.wc{border:1px solid var(--border);background:rgba(255,255,255,.006);overflow:hidden;}
+.wc+.wc{border-top:none;}
+.wc:first-child{border-radius:10px 10px 0 0;}
+.wc:last-child{border-radius:0 0 10px 10px;}
+.wc.open{border-color:var(--border2);}
+.wh{display:grid;grid-template-columns:70px 1fr auto;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;transition:background .18s;}
+.wh:hover{background:rgba(255,255,255,.022);}
+.wn{font-family:var(--mono);font-size:10px;color:var(--t3);}
+.wi h3{font-size:14px;font-weight:500;color:var(--t1);}
+.wi p{font-size:12px;color:var(--t3);margin-top:1px;}
+.wm{display:flex;align-items:center;gap:9px;}
+.badge{font-family:var(--mono);font-size:10px;font-weight:600;padding:2px 8px;border-radius:999px;}
+.bs{background:rgba(99,153,34,.14);color:#97C459;border:1px solid rgba(99,153,34,.28);}
+.bc{background:rgba(24,95,165,.14);color:#85B7EB;border:1px solid rgba(24,95,165,.28);}
+.bp{background:rgba(59,109,17,.14);color:#8DC95C;border:1px solid rgba(59,109,17,.28);}
+.bsq{background:rgba(133,79,11,.14);color:#FAC775;border:1px solid rgba(133,79,11,.28);}
+.bw{background:rgba(83,58,183,.14);color:#AFA9EC;border:1px solid rgba(83,58,183,.28);}
+.bf{background:rgba(59,109,17,.14);color:#8DC95C;border:1px solid rgba(59,109,17,.28);}
+.bai{background:rgba(163,45,45,.14);color:#F09595;border:1px solid rgba(163,45,45,.28);}
+.wa{font-size:13px;color:var(--t3);transition:transform .25s;}
+.wc.open .wa{transform:rotate(90deg);}
+.wb{display:none;padding:2px 20px 28px;}
+.wc.open .wb{display:block;}
+/* INTRO */
+.ibox{font-size:13px;font-family:var(--serif);font-style:italic;color:var(--t2);line-height:1.85;padding:16px 18px;background:rgba(216,90,48,.04);border-left:2px solid var(--red);border-radius:0 6px 6px 0;margin-bottom:26px;}
+/* TOPIC BLOCK */
+.tblock{margin-bottom:28px;}
+.tsec{font-family:var(--mono);font-size:9px;color:var(--red);letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+.tc{border:1px solid var(--border);border-radius:8px;background:var(--bg2);overflow:hidden;}
+.tch{padding:11px 14px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;}
+.tch h4{font-size:12px;font-weight:500;color:var(--t1);}
+.tico{width:20px;height:20px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;}
+.tir{background:rgba(216,90,48,.15);color:var(--red);}
+.tib{background:rgba(24,95,165,.15);color:#85B7EB;}
+.tig{background:rgba(59,109,17,.15);color:#8DC95C;}
+.tia{background:rgba(133,79,11,.15);color:#FAC775;}
+.tip{background:rgba(83,58,183,.15);color:#AFA9EC;}
+.tit{background:rgba(15,110,86,.15);color:#5DCAA5;}
+.titems{padding:10px 14px;display:flex;flex-direction:column;gap:0;}
+.ti{padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.ti:last-child{border-bottom:none;}
+.tin{font-size:11px;font-weight:500;color:var(--t1);margin-bottom:3px;}
+.tid{font-size:11.5px;color:var(--t3);line-height:1.6;}
+.tid c,.tid code{font-family:var(--mono);font-size:10.5px;color:#85B7EB;background:rgba(24,95,165,.12);padding:1px 4px;border-radius:3px;}
+/* CODE */
+.cb{background:#0c0b09;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:14px;}
+.cbh{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:rgba(255,255,255,.022);border-bottom:1px solid var(--border);}
+.cbl{font-family:var(--mono);font-size:9px;color:var(--t3);letter-spacing:.1em;text-transform:uppercase;}
+.cbt{font-family:var(--mono);font-size:10.5px;color:var(--t2);}
+pre{padding:16px;overflow-x:auto;}
+code{font-family:var(--mono);font-size:12px;line-height:1.8;color:#d0ccbf;}
+.kw{color:#85B7EB;}.fn{color:#8DC95C;}.str{color:#FAC775;}
+.cm{color:#48463f;font-style:italic;}.num{color:#F09595;}
+.tp{color:#AFA9EC;}.op{color:#D85A30;}.cn{color:#5DCAA5;}
+/* CALLOUT */
+.cl{padding:12px 14px;border-radius:6px;margin-bottom:14px;font-size:12.5px;line-height:1.65;}
+.cl-i{background:rgba(24,95,165,.07);border:1px solid rgba(24,95,165,.2);color:#b5d0ec;}
+.cl-w{background:rgba(133,79,11,.07);border:1px solid rgba(133,79,11,.2);color:#e0ba72;}
+.cl-g{background:rgba(59,109,17,.07);border:1px solid rgba(59,109,17,.2);color:#96ce5d;}
+.cl strong{font-weight:600;display:block;margin-bottom:3px;font-size:10px;letter-spacing:.07em;text-transform:uppercase;}
+/* TABLE */
+.ct{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:18px;}
+.ct th{font-family:var(--mono);font-size:9px;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;padding:7px 11px;border-bottom:1px solid var(--border);text-align:left;font-weight:500;}
+.ct td{padding:8px 11px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top;}
+.ct tr:last-child td{border-bottom:none;}
+.ct td:first-child{color:var(--t1);font-weight:500;white-space:nowrap;}
+.ct td c,.ct td code{font-family:var(--mono);font-size:10.5px;color:#85B7EB;background:rgba(24,95,165,.12);padding:1px 4px;border-radius:3px;}
+/* EXERCISES */
+.ex{background:rgba(216,90,48,.04);border:1px solid rgba(216,90,48,.16);border-radius:8px;padding:16px;margin-top:18px;}
+.ex h4{font-family:var(--mono);font-size:9px;color:var(--red);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;}
+.exl{display:flex;flex-direction:column;gap:7px;}
+.ei{display:flex;gap:9px;align-items:flex-start;}
+.en{font-family:var(--mono);font-size:9px;color:var(--red);margin-top:2px;flex-shrink:0;min-width:18px;}
+.et{font-size:12.5px;color:var(--t2);line-height:1.6;}
+.et strong{color:var(--t1);font-weight:500;}
+/* FINAL */
+.fw{background:rgba(216,90,48,.03);border:1px solid rgba(216,90,48,.14);border-radius:12px;padding:36px;margin:16px 0 56px;}
+.fw h2{font-size:24px;font-weight:300;color:var(--t1);margin-bottom:8px;letter-spacing:-.4px;}
+.fw>p{font-size:13px;color:var(--t3);line-height:1.8;margin-bottom:24px;}
+.fg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.fi{padding:14px;border:1px solid rgba(216,90,48,.16);border-radius:8px;background:rgba(216,90,48,.025);}
+.fi h4{font-size:12px;font-weight:500;color:var(--t1);margin-bottom:6px;}
+.fi p{font-size:11.5px;color:var(--t3);line-height:1.6;}
+.fi ul{margin-top:7px;list-style:none;display:flex;flex-direction:column;gap:3px;}
+.fi ul li{font-size:11.5px;color:var(--t3);padding-left:10px;position:relative;}
+.fi ul li::before{content:'→';position:absolute;left:0;color:var(--red);font-size:8px;top:3px;}
+@media(max-width:780px){.hero{grid-template-columns:1fr;padding:80px 1.5rem 48px;}.page{padding:0 1.5rem;}.tgrid{grid-template-columns:1fr;}.fg{grid-template-columns:1fr;}.pgrid{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nb">CS50</div>
+  <div class="ns">
+    <a class="na" href="#s0">Semana 0</a><a class="na" href="#s1">Semana 1</a><a class="na" href="#s2">Semana 2</a><a class="na" href="#s3">Semana 3</a><a class="na" href="#s4">Semana 4</a><a class="na" href="#s5">Semana 5</a><a class="na" href="#s6">Semana 6</a><a class="na" href="#s7">Semana 7</a><a class="na" href="#s8">Semana 8</a><a class="na" href="#s9">Semana 9</a><a class="na" href="#s10">Semana 10</a><a class="na" href="#final">Projeto Final</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div>
+    <div class="he">Mikaele Neres · Ordinária-Tech · 2026</div>
+    <h1>Ciência da<br><em>Computação 50</em></h1>
+    <p class="hs">Curso completo com todos os tópicos desenvolvidos em profundidade — teoria, exemplos de código comentados e exercícios práticos para cada semana.</p>
+  </div>
+  <div class="hstats">
+    <div class="hs2"><div class="sn">11</div><div class="sl">Semanas de conteúdo</div></div>
+    <div class="hs2"><div class="sn">6</div><div class="sl">Linguagens cobertas</div></div>
+    <div class="hs2"><div class="sn">88</div><div class="sl">Tópicos desenvolvidos</div></div>
+    <div class="hs2"><div class="sn">40+</div><div class="sl">Exemplos de código</div></div>
+  </div>
+</div>
+
+<div class="page">
+  <div class="sh"><div class="st">Fundação teórica</div><div class="si">Os 6 pilares do pensamento computacional</div></div>
+  <div class="pgrid">
+    <div class="pc"><div class="pn">01</div><h3>Abstração</h3><p>Esconder complexidade desnecessária. Ao usar <code style="font-family:var(--mono);font-size:10.5px;color:#85B7EB;background:rgba(24,95,165,.12);padding:1px 4px;border-radius:3px">printf()</code>, não precisamos saber como o texto aparece na tela — abstraímos o SO, a placa de vídeo e os drivers. Bons programadores criam camadas de abstração.</p><div class="pcn">Ex: você usa GPS sem entender triangulação por satélite</div></div>
+    <div class="pc"><div class="pn">02</div><h3>Decomposição</h3><p>Nenhum problema complexo é resolvido de uma vez. "Fazer um jogo" vira "mover personagem + detectar colisão + mostrar pontuação + tocar som". Cada parte é menor, testável e implementável separadamente em funções ou módulos.</p><div class="pcn">Top-down design: comece pelo geral, quebre recursivamente</div></div>
+    <div class="pc"><div class="pn">03</div><h3>Reconhecimento de Padrões</h3><p>Problemas diferentes frequentemente têm soluções similares. Reconhecer que "buscar um item" é sempre o mesmo padrão permite reutilizar código. Isso leva a bibliotecas, frameworks e design patterns amplamente usados.</p><div class="pcn">A maioria dos bugs tem padrões — aprenda a reconhecê-los</div></div>
+    <div class="pc"><div class="pn">04</div><h3>Algoritmos</h3><p>Sequência finita e precisa de passos para resolver um problema. Para ser válido: deve terminar, ser correto e ser eficiente. Existem algoritmos para quase tudo — ordenação, busca, criptografia, compressão, roteamento de rede.</p><div class="pcn">O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n²) &lt; O(2ⁿ)</div></div>
+    <div class="pc"><div class="pn">05</div><h3>Estruturas de Dados</h3><p>Dados precisam ser organizados para acesso eficiente. Arrays são rápidos para acesso direto mas lentos para inserção. Listas ligadas são o oposto. A escolha certa transforma O(n²) em O(1) — a diferença entre segundos e horas.</p><div class="pcn">Problema + dados → estrutura certa → algoritmo adequado</div></div>
+    <div class="pc"><div class="pn">06</div><h3>Complexidade Computacional</h3><p>Big O descreve como um algoritmo escala. Um algoritmo O(n²) que processa 1.000 itens em 1ms levará 1.000 segundos para 1 milhão de itens. Pensar em complexidade desde o início evita sistemas que "funcionam no teste mas travam em produção".</p><div class="pcn">Sempre pergunte: o que acontece se a entrada crescer 1000x?</div></div>
+  </div>
+</div>
+
+<hr class="div">
+
+<div class="page">
+  <div class="sh"><div class="st">Currículo detalhado</div><div class="si">Semana a semana — conteúdo completo</div><div class="ss">Clique em cada semana para expandir os tópicos com explicações, exemplos de código e exercícios.</div></div>
+  <div class="weeks">
+
+<!-- ═══════════════ SEMANA 0 ═══════════════ -->
+<div class="wc" id="s0">
+  <div class="wh" onclick="tog(this)">
+    <div class="wn">Semana 0</div>
+    <div class="wi"><h3>Scratch & Fundamentos</h3><p>Binário, algoritmos, lógica de programação visual</p></div>
+    <div class="wm"><span class="badge bs">Scratch</span><span class="wa">▶</span></div>
+  </div>
+  <div class="wb">
+    <div class="ibox">Antes de escrever código, precisamos entender como computadores representam e processam informação. Esta semana foca na base: o sistema binário, algoritmos como conceito universal, e a plataforma Scratch — que elimina a barreira da sintaxe para que você se concentre no raciocínio lógico puro.</div>
+
+    <div class="tblock">
+      <div class="tsec">Representação de Dados</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tir">☰</div><h4>Sistema Binário</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Por que binário?</div><div class="tid">Computadores são feitos de transistores que só têm dois estados: ligado (1) ou desligado (0). É muito mais confiável distinguir dois estados do que dez — um sinal de 3.7V é 3 ou 4? Mas qualquer coisa acima de 2.5V é 1, abaixo é 0. Simples e robusto.</div></div>
+            <div class="ti"><div class="tin">Conversão decimal → binário</div><div class="tid">Divida repetidamente por 2 e registre os restos. Ex: 50 ÷ 2 = 25 r0, 25 ÷ 2 = 12 r1, 12 ÷ 2 = 6 r0, 6 ÷ 2 = 3 r0, 3 ÷ 2 = 1 r1, 1 ÷ 2 = 0 r1. Lendo restos de baixo para cima: <code>110010</code> = 50.</div></div>
+            <div class="ti"><div class="tin">Potências de 2</div><div class="tid">Cada bit representa uma potência de 2. Da direita para a esquerda: 2⁰=1, 2¹=2, 2²=4, 2³=8, 2⁴=16, 2⁵=32, 2⁶=64, 2⁷=128. Com 8 bits (1 byte) você representa 0 a 255. Com n bits, você representa 2ⁿ valores distintos.</div></div>
+            <div class="ti"><div class="tin">Bits, bytes, kilobytes...</div><div class="tid">1 bit = menor unidade. 8 bits = 1 byte. 1 KB = 1.024 bytes. 1 MB = 1.024 KB. 1 GB = 1.024 MB. Um arquivo MP3 de 3 minutos usa ~3 MB. Uma foto de 12 megapixels usa ~3 MB. Um filme 4K usa ~10 GB.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tib">T</div><h4>Representação de Texto e Imagens</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">ASCII — American Standard Code</div><div class="tid">Em 1963, a ASCII mapeou 128 caracteres para números de 0 a 127. A letra 'A' = 65, 'a' = 97, '0' = 48, espaço = 32. Por isso em C, <code>'A' + 1 == 'B'</code> — são apenas números inteiros com interpretação especial.</div></div>
+            <div class="ti"><div class="tin">Unicode e UTF-8</div><div class="tid">ASCII só comporta inglês. Unicode define mais de 140.000 caracteres — japonês, árabe, emojis. UTF-8 é a codificação mais usada: caracteres ASCII usam 1 byte, outros usam até 4. O emoji 😀 = U+1F600 = 4 bytes em UTF-8.</div></div>
+            <div class="ti"><div class="tin">Pixels e RGB</div><div class="tid">Uma imagem é uma grade de pixels. Cada pixel tem uma cor representada por 3 bytes: Vermelho (0-255), Verde (0-255) e Azul (0-255). Branco = (255,255,255). Preto = (0,0,0). Vermelho = (255,0,0). Uma foto de 12MP tem 12 milhões de pixels × 3 bytes = ~36 MB sem compressão.</div></div>
+            <div class="ti"><div class="tin">Som — amostras e frequência</div><div class="tid">Som digital é a captura periódica da amplitude de uma onda. Taxa de amostragem de CD: 44.100 amostras/segundo. Cada amostra = 16 bits. Estéreo = 2 canais. 1 minuto = 44.100 × 2 × 2 bytes × 60 ≈ 10 MB sem compressão (MP3 comprime ~10x).</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tblock">
+      <div class="tsec">Algoritmos e Scratch</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tig">→</div><h4>O Que é um Algoritmo</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Definição formal</div><div class="tid">Um algoritmo é uma sequência finita, determinística e eficaz de passos que resolve um problema ou executa uma tarefa. Finita: deve terminar. Determinística: o mesmo input produz sempre o mesmo output. Eficaz: cada passo é executável em tempo finito.</div></div>
+            <div class="ti"><div class="tin">Busca linear — O(n)</div><div class="tid">Procura sequencialmente do início ao fim. Para encontrar "João" numa lista de 1.000 nomes, no pior caso verifica todos os 1.000. Se a lista dobrar para 2.000, o tempo dobra. Crescimento linear com o tamanho da entrada.</div></div>
+            <div class="ti"><div class="tin">Busca binária — O(log n)</div><div class="tid">Requer lista ordenada. Vai ao meio, pergunta "é maior ou menor?", elimina metade, repete. Com 1.000 nomes: ~10 passos (log₂ 1000 ≈ 10). Com 1 bilhão: ~30 passos. Incrivelmente eficiente — cada passo elimina metade das possibilidades.</div></div>
+            <div class="ti"><div class="tin">Exemplo do livro telefônico</div><div class="tid">David Malan rasga metade de uma lista telefônica ao vivo para demonstrar busca binária. Com 1.000 páginas: linear leva até 1.000 passos, binária leva apenas ~10. Para 1 bilhão: 1 bilhão vs 30 passos. A diferença é astronômica.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tia">⬡</div><h4>Scratch — Lógica Sem Sintaxe</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Por que Scratch?</div><div class="tid">Programação real exige dominar sintaxe ao mesmo tempo que lógica. Scratch elimina a sintaxe — blocos se encaixam visualmente. Isso permite focar 100% em lógica: sequências, loops, condicionais, eventos, variáveis e funções.</div></div>
+            <div class="ti"><div class="tin">Conceitos chave no Scratch</div><div class="tid">Sprites (atores), Palco (cenário), Scripts (algoritmos visuais), Costumes (aparências), Sons e Backdrop. O bloco "quando bandeira verde clicada" é equivalente ao <code>main()</code> em C — o ponto de entrada do programa.</div></div>
+            <div class="ti"><div class="tin">Abstrações em Scratch</div><div class="tid">"Meus Blocos" no Scratch = funções em C/Python. Você agrupa uma sequência de ações, dá um nome, e reutiliza esse bloco em vários lugares. Isso ensina o princípio DRY (Don't Repeat Yourself) de forma visual e intuitiva.</div></div>
+            <div class="ti"><div class="tin">Eventos e concorrência</div><div class="tid">Múltiplos sprites podem ter scripts rodando ao mesmo tempo quando o mesmo evento ocorre — isso é concorrência. Em Scratch é visual: vários "quando bandeira clicada" executam simultaneamente. Prepare-se para a mesma ideia em linguagens reais.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cb">
+      <div class="cbh"><span class="cbl">Pseudocódigo</span><span class="cbt">busca_binaria.pseudo</span></div>
+      <pre><code><span class="cm">// Lista de 1000 nomes ORDENADOS</span>
+<span class="cm">// Busca binária — divide e conquista</span>
+
+busca_binaria(lista, alvo):
+    inicio = 0
+    fim = tamanho(lista) - 1
+
+    <span class="kw">enquanto</span> inicio <= fim:
+        meio = (inicio + fim) / 2
+
+        <span class="kw">se</span> lista[meio] == alvo:
+            <span class="kw">retornar</span> meio        <span class="cm">// Encontrou!</span>
+        <span class="kw">senão se</span> lista[meio] < alvo:
+            inicio = meio + 1   <span class="cm">// Busca na metade direita</span>
+        <span class="kw">senão</span>:
+            fim = meio - 1      <span class="cm">// Busca na metade esquerda</span>
+
+    <span class="kw">retornar</span> -1  <span class="cm">// Não encontrou</span>
+
+<span class="cm">// Comparação de complexidade:</span>
+<span class="cm">// 1.000 itens: linear=1.000 passos | binária=10 passos</span>
+<span class="cm">// 1.000.000 itens: linear=1M passos | binária=20 passos</span></code></pre>
+    </div>
+
+    <div class="cl cl-i"><strong>conceito chave</strong>A diferença entre O(n) e O(log n) não é visível em listas pequenas. Com 10 itens: 10 vs 3 passos. Com 1 bilhão: 1.000.000.000 vs 30 passos. Escolher o algoritmo certo é mais impactante do que ter hardware mais rápido.</div>
+
+    <div class="ex"><h4>Exercícios Práticos — Semana 0</h4>
+      <div class="exl">
+        <div class="ei"><div class="en">01</div><div class="et"><strong>Binário na mão:</strong> Converta 42, 255 e 1024 para binário. Depois converta 10110011 e 11111111 para decimal. Sem calculadora.</div></div>
+        <div class="ei"><div class="en">02</div><div class="et"><strong>Scratch — Jogo simples:</strong> Crie um jogo onde um sprite foge de outro. Deve ter: pontuação, fim de jogo e ao menos 3 sprites interagindo com eventos.</div></div>
+        <div class="ei"><div class="en">03</div><div class="et"><strong>Scratch — Quiz:</strong> Implemente um quiz de 5 perguntas com variáveis para pontuação, condicionais para avaliar resposta e loop para avançar perguntas.</div></div>
+        <div class="ei"><div class="en">04</div><div class="et"><strong>Análise de algoritmos:</strong> Você tem uma lista com 1.000.000 de nomes ordenados. Quantos passos, no máximo, a busca binária precisaria? E a linear? Justifique.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SEMANA 1 ═══════════════ -->
+<div class="wc" id="s1">
+  <div class="wh" onclick="tog(this)">
+    <div class="wn">Semana 1</div>
+    <div class="wi"><h3>Linguagem C</h3><p>Sintaxe, tipos de dados, condicionais, loops e funções</p></div>
+    <div class="wm"><span class="badge bc">C</span><span class="wa">▶</span></div>
+  </div>
+  <div class="wb">
+    <div class="ibox">C foi criada em 1972 por Dennis Ritchie nos Bell Labs para reescrever o Unix. É uma linguagem de baixo nível que expõe como o computador realmente funciona — tipos de tamanho fixo, gerenciamento manual de memória, acesso direto a hardware. Por isso, aprender C primeiro faz tudo o mais alto nível parecer simples e faz sentido.</div>
+
+    <div class="tblock">
+      <div class="tsec">Estrutura e Tipos</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tir">{ }</div><h4>Anatomia de um Programa C</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">#include — importar funcionalidades</div><div class="tid"><code>#include &lt;stdio.h&gt;</code> inclui a biblioteca de entrada/saída padrão, que define <code>printf</code> e <code>scanf</code>. <code>#include &lt;cs50.h&gt;</code> inclui helpers do CS50 como <code>get_string</code>. Sem o include, o compilador não conhece essas funções.</div></div>
+            <div class="ti"><div class="tin">int main(void) — ponto de entrada</div><div class="tid">Todo programa C começa em <code>main</code>. O <code>int</code> antes indica que main retorna um inteiro — 0 significa "tudo certo", qualquer outro valor sinaliza erro. O SO usa esse valor. <code>void</code> indica que main não recebe argumentos (por agora).</div></div>
+            <div class="ti"><div class="tin">printf — saída formatada</div><div class="tid"><code>printf("Olá, %s!\n", nome)</code> imprime texto. Os especificadores: <code>%s</code>=string, <code>%i</code>=inteiro, <code>%f</code>=float, <code>%c</code>=char, <code>%p</code>=ponteiro. O <code>\n</code> é o caractere de nova linha (newline). Sem ele, o próximo print fica na mesma linha.</div></div>
+            <div class="ti"><div class="tin">return 0 — encerrar o programa</div><div class="tid">Ao atingir <code>return 0</code>, o programa encerra e devolve 0 ao SO. Convenção Unix: 0 = sucesso. Você pode verificar isso no terminal com <code>echo $?</code> logo após executar o programa. Scripts de automação dependem desses valores.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tib">int</div><h4>Tipos Primitivos e seus Limites</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">int — inteiro de 32 bits</div><div class="tid">Ocupa 4 bytes. Armazena valores de -2.147.483.648 a 2.147.483.647. <code>unsigned int</code> vai de 0 a 4.294.967.295. Importante: <code>int</code> não armazena decimais — 5/2 = 2 (truncamento), não 2.5.</div></div>
+            <div class="ti"><div class="tin">float e double — ponto flutuante</div><div class="tid"><code>float</code> usa 4 bytes, ~7 dígitos de precisão. <code>double</code> usa 8 bytes, ~15 dígitos. Nunca compare floats com <code>==</code>! 0.1 + 0.2 em ponto flutuante é 0.30000000000000004, não exatamente 0.3. Use <code>fabs(a-b) &lt; 0.0001</code>.</div></div>
+            <div class="ti"><div class="tin">char — um único caractere</div><div class="tid"><code>char c = 'A'</code> armazena o valor ASCII 65 em 1 byte. É tecnicamente um inteiro pequeno. Por isso <code>c + 1 == 'B'</code>, <code>c - 'A' == 0</code>. Isso é explorado na cifra de César: <code>(c - 'a' + chave) % 26 + 'a'</code>.</div></div>
+            <div class="ti"><div class="tin">bool — verdadeiro ou falso</div><div class="tid">Em C padrão, 0 = false, qualquer coisa ≠0 = true. Com <code>#include &lt;stdbool.h&gt;</code> (ou cs50.h), você pode usar <code>bool</code>, <code>true</code> e <code>false</code>. Cuidado: <code>if (x = 5)</code> é atribuição (sempre true!), não comparação (<code>==</code>).</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cb">
+      <div class="cbh"><span class="cbl">C</span><span class="cbt">tipos_e_overflow.c</span></div>
+      <pre><code><span class="tp">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="tp">#include</span> <span class="str">&lt;limits.h&gt;</span>   <span class="cm">// contém INT_MAX, INT_MIN</span>
+
+<span class="kw">int</span> <span class="fn">main</span>(<span class="kw">void</span>)
+{
+    <span class="kw">int</span> maximo = <span class="cn">INT_MAX</span>;         <span class="cm">// 2.147.483.647</span>
+    <span class="fn">printf</span>(<span class="str">"%i\n"</span>, maximo);        <span class="cm">// 2147483647</span>
+    <span class="fn">printf</span>(<span class="str">"%i\n"</span>, maximo + <span class="num">1</span>);    <span class="cm">// OVERFLOW! → -2147483648</span>
+
+    <span class="cm">// Truncamento em divisão inteira</span>
+    <span class="kw">int</span> a = <span class="num">5</span>, b = <span class="num">2</span>;
+    <span class="fn">printf</span>(<span class="str">"%i\n"</span>, a / b);          <span class="cm">// 2, não 2.5!</span>
+
+    <span class="cm">// Para obter 2.5, converta para float</span>
+    <span class="fn">printf</span>(<span class="str">"%.1f\n"</span>, (<span class="kw">float</span>) a / b); <span class="cm">// 2.5</span>
+
+    <span class="cm">// Imprecisão de ponto flutuante</span>
+    <span class="fn">printf</span>(<span class="str">"%.20f\n"</span>, <span class="num">0.1</span> + <span class="num">0.2</span>);   <span class="cm">// 0.30000000000000004441...</span>
+}</code></pre>
+    </div>
+
+    <div class="tblock">
+      <div class="tsec">Controle de Fluxo</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tig">if</div><h4>Condicionais</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">if / else if / else</div><div class="tid">O bloco <code>if</code> executa se a condição for verdadeira (≠0). O <code>else if</code> é verificado somente se o if anterior foi falso. O <code>else</code> executa se nenhum dos anteriores foi verdadeiro. Apenas um bloco é executado — como uma hierarquia de decisões.</div></div>
+            <div class="ti"><div class="tin">switch — múltiplos casos</div><div class="tid"><code>switch(x)</code> compara x com cada <code>case</code>. Sem <code>break</code>, a execução "cai" para o próximo case (fallthrough) — às vezes intencional, geralmente um bug. <code>default</code> executa se nenhum case bater. Mais legível que vários <code>else if</code> para inteiros ou chars.</div></div>
+            <div class="ti"><div class="tin">Operadores lógicos</div><div class="tid"><code>&&</code> (AND): ambas as condições devem ser verdadeiras. <code>||</code> (OR): ao menos uma deve ser verdadeira. <code>!</code> (NOT): inverte. Curto-circuito: em <code>A && B</code>, se A for falso, B não é avaliado. Em <code>A || B</code>, se A for verdadeiro, B não é avaliado.</div></div>
+            <div class="ti"><div class="tin">Operador ternário</div><div class="tid"><code>x = condição ? valor_se_true : valor_se_false</code>. Exemplo: <code>max = a &gt; b ? a : b</code>. É uma expressão, não um statement — pode ser usado inline. Útil para atribuições simples, mas abuse tornará o código ilegível.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tia">↻</div><h4>Loops</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">for — iteração com contador</div><div class="tid"><code>for (init; condição; atualização)</code>. A init executa uma vez, depois a condição é verificada antes de cada iteração, e a atualização executa após cada iteração. <code>for (int i = 0; i &lt; n; i++)</code> é o padrão para percorrer arrays de 0 a n-1.</div></div>
+            <div class="ti"><div class="tin">while — repetição condicional</div><div class="tid">Executa enquanto a condição for verdadeira. Verifica antes de executar — se a condição já é falsa na primeira verificação, o corpo nunca executa. Ideal quando o número de iterações não é conhecido de antemão.</div></div>
+            <div class="ti"><div class="tin">do-while — executa ao menos uma vez</div><div class="tid">A condição é verificada após o corpo. Garante pelo menos uma execução. Usado para menus: execute a ação, depois pergunte "continuar?". No CS50, é o padrão para validação de input do usuário.</div></div>
+            <div class="ti"><div class="tin">break e continue</div><div class="tid"><code>break</code> encerra o loop imediatamente. <code>continue</code> pula para a próxima iteração sem executar o resto do corpo. Ambos só afetam o loop mais interno. Use com moderação — podem tornar o fluxo difícil de seguir.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cb">
+      <div class="cbh"><span class="cbl">C</span><span class="cbt">mario.c — pirâmide de #</span></div>
+      <pre><code><span class="tp">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="tp">#include</span> <span class="str">&lt;cs50.h&gt;</span>
+
+<span class="kw">int</span> <span class="fn">main</span>(<span class="kw">void</span>)
+{
+    <span class="kw">int</span> altura;
+    <span class="kw">do</span>
+    {
+        altura = <span class="fn">get_int</span>(<span class="str">"Altura (1-8): "</span>);
+    }
+    <span class="kw">while</span> (altura &lt; <span class="num">1</span> || altura &gt; <span class="num">8</span>); <span class="cm">// valida o input</span>
+
+    <span class="kw">for</span> (<span class="kw">int</span> linha = <span class="num">1</span>; linha &lt;= altura; linha++)
+    {
+        <span class="cm">// Espaços antes dos #</span>
+        <span class="kw">for</span> (<span class="kw">int</span> espaço = <span class="num">0</span>; espaço &lt; altura - linha; espaço++)
+            <span class="fn">printf</span>(<span class="str">" "</span>);
+
+        <span class="cm">// Imprimir # da pirâmide esquerda</span>
+        <span class="kw">for</span> (<span class="kw">int</span> hash = <span class="num">0</span>; hash &lt; linha; hash++)
+            <span class="fn">printf</span>(<span class="str">"#"</span>);
+
+        <span class="fn">printf</span>(<span class="str">"  "</span>); <span class="cm">// dois espaços no meio</span>
+
+        <span class="cm">// Pirâmide direita</span>
+        <span class="kw">for</span> (<span class="kw">int</span> hash = <span class="num">0</span>; hash &lt; linha; hash++)
+            <span class="fn">printf</span>(<span class="str">"#"</span>);
+
+        <span class="fn">printf</span>(<span class="str">"\n"</span>);
+    }
+}
+<span class="cm">/* Saída com altura=4:
+      #  #
+     ##  ##
+    ###  ###
+   ####  ####  */</span></code></pre>
+    </div>
+
+    <div class="tblock">
+      <div class="tsec">Funções</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tip">ƒ</div><h4>Definindo e Chamando Funções</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Sintaxe de função em C</div><div class="tid"><code>tipo_retorno nome(tipo param1, tipo param2)</code>. Se não retorna nada: <code>void</code>. Exemplo: <code>int soma(int a, int b) { return a + b; }</code>. O <code>return</code> encerra a função imediatamente e devolve o valor ao chamador.</div></div>
+            <div class="ti"><div class="tin">Protótipos (declarações antecipadas)</div><div class="tid">Em C, funções devem ser declaradas antes de serem usadas. Se você define <code>soma()</code> depois de <code>main()</code>, precisa de um protótipo antes: <code>int soma(int a, int b);</code>. Isso informa ao compilador a assinatura sem o corpo.</div></div>
+            <div class="ti"><div class="tin">Passagem por valor</div><div class="tid">C passa argumentos por valor — a função recebe uma cópia. Modificar o parâmetro dentro da função não afeta a variável original. Para modificar a original, você precisa passar um ponteiro (veremos na Semana 4).</div></div>
+            <div class="ti"><div class="tin">Escopo de variáveis</div><div class="tid">Variáveis declaradas dentro de <code>{ }</code> existem apenas naquele bloco. Variáveis locais de uma função não existem em outra. Variáveis globais (declaradas fora de todas as funções) existem em todo o programa — use com cuidado, pois tornam o código difícil de rastrear.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tit">✓</div><h4>Boas Práticas com Funções</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Uma função, uma responsabilidade</div><div class="tid">O princípio SRP (Single Responsibility Principle): cada função deve fazer exatamente uma coisa e fazê-la bem. Uma função <code>calcular_troco()</code> não deve também imprimir o resultado — separe em <code>calcular_troco()</code> e <code>imprimir_troco()</code>.</div></div>
+            <div class="ti"><div class="tin">Nomes descritivos</div><div class="tid">Um nome claro é documentação. <code>get_positive_int()</code> é melhor que <code>gpi()</code>. <code>is_valid_credit_card()</code> é melhor que <code>check()</code>. Se você precisou comentar o que a função faz, o nome provavelmente é ruim.</div></div>
+            <div class="ti"><div class="tin">Funções pequenas e testáveis</div><div class="tid">Funções menores são mais fáceis de testar, debugar e reutilizar. Se uma função tem mais de 20 linhas, considere se ela pode ser dividida. "Scroll thumb rule": se você precisa rolar para ver toda a função, ela provavelmente é grande demais.</div></div>
+            <div class="ti"><div class="tin">Recursão: função que chama a si mesma</div><div class="tid">Toda função recursiva precisa: (1) caso base — condição que para a recursão, e (2) caso recursivo — chamada com input menor. Sem caso base, recursão infinita → stack overflow. Exemplo: <code>int fatorial(int n) { return n &lt;= 1 ? 1 : n * fatorial(n-1); }</code></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex"><h4>Exercícios Práticos — Problem Set 1</h4>
+      <div class="exl">
+        <div class="ei"><div class="en">01</div><div class="et"><strong>Mario (fácil):</strong> Imprima uma pirâmide alinhada à direita com altura H fornecida pelo usuário (1-8). Valide o input com do-while.</div></div>
+        <div class="ei"><div class="en">02</div><div class="et"><strong>Mario (difícil):</strong> Imprima duas pirâmides lado a lado separadas por dois espaços, como no jogo Super Mario Bros.</div></div>
+        <div class="ei"><div class="en">03</div><div class="et"><strong>Cash:</strong> Calcule o número mínimo de moedas (25¢, 10¢, 5¢, 1¢) para dar um troco informado pelo usuário em centavos. Use algoritmo guloso.</div></div>
+        <div class="ei"><div class="en">04</div><div class="et"><strong>Credit:</strong> Valide um número de cartão de crédito usando o <em>Algoritmo de Luhn</em> e identifique se é VISA (começa com 4), MASTERCARD (51-55) ou AMEX (34 ou 37).</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SEMANA 2 ═══════════════ -->
+<div class="wc" id="s2">
+  <div class="wh" onclick="tog(this)">
+    <div class="wn">Semana 2</div>
+    <div class="wi"><h3>Arrays e Compilação</h3><p>Strings, argc/argv, criptografia básica e debugging</p></div>
+    <div class="wm"><span class="badge bc">C</span><span class="wa">▶</span></div>
+  </div>
+  <div class="wb">
+    <div class="ibox">Arrays são a estrutura de dados mais fundamental: blocos contíguos de memória armazenando elementos do mesmo tipo. Em C, strings são simplesmente arrays de <code>char</code> terminados pelo caractere nulo <code>'\0'</code>. Entender isso é essencial para compreender como qualquer dado textual é armazenado e manipulado em memória.</div>
+    <div class="tblock">
+      <div class="tsec">Arrays em C</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tir">[ ]</div><h4>Fundamentos de Arrays</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Declaração e inicialização</div><div class="tid"><code>int notas[5];</code> declara 5 inteiros contíguos na memória. <code>int arr[] = {10, 20, 30};</code> declara com tamanho inferido pelo compilador (3). O tamanho deve ser constante — em C99+ pode ser variável, mas evite VLAs (Variable Length Arrays) por limitações de portabilidade.</div></div>
+            <div class="ti"><div class="tin">Indexação começa em zero</div><div class="tid">O primeiro elemento é <code>arr[0]</code>, o último é <code>arr[n-1]</code>. Acessar <code>arr[n]</code> é um erro (índice fora dos limites) — C não verifica isso, você pode ler/escrever na memória de outro dado. Isso é um bug clássico: "off-by-one error".</div></div>
+            <div class="ti"><div class="tin">Arrays e memória</div><div class="tid">Um array <code>int arr[5]</code> ocupa 20 bytes contíguos (5 × 4 bytes). O nome do array <code>arr</code> é um ponteiro para o primeiro elemento. Por isso <code>arr[i]</code> é equivalente a <code>*(arr + i)</code> — aritmética de ponteiros! Será explorado na semana 4.</div></div>
+            <div class="ti"><div class="tin">Arrays multidimensionais</div><div class="tid"><code>int grid[3][4]</code> é um array de 3 linhas e 4 colunas. Acesso: <code>grid[linha][coluna]</code>. Na memória, é armazenado em row-major order (linha por linha). Útil para matrizes, tabuleiros de jogos e imagens.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tib">str</div><h4>Strings — Arrays de Char</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">String = char[] + '\0'</div><div class="tid"><code>char nome[] = "Alice"</code> ocupa 6 bytes: 'A','l','i','c','e','\0'. O caractere nulo <code>'\0'</code> (valor ASCII 0) marca o fim. Por isso <code>strlen("Alice")</code> = 5, não 6 — conta até o '\0' mas não o inclui. Esquecer o '\0' é um bug sério.</div></div>
+            <div class="ti"><div class="tin">Funções de string — &lt;string.h&gt;</div><div class="tid"><code>strlen(s)</code>: comprimento. <code>strcmp(a,b)</code>: compara (0=iguais). <code>strcpy(dst, src)</code>: copia. <code>strcat(dst, src)</code>: concatena. <code>strstr(s, sub)</code>: encontra substring. Nunca compare strings com <code>==</code> — isso compara ponteiros, não conteúdo!</div></div>
+            <div class="ti"><div class="tin">Funções de caractere — &lt;ctype.h&gt;</div><div class="tid"><code>isupper(c)</code>, <code>islower(c)</code>, <code>isalpha(c)</code>, <code>isdigit(c)</code>, <code>isspace(c)</code>: verificam o tipo do caractere. <code>toupper(c)</code>, <code>tolower(c)</code>: convertem. Todas recebem um <code>int</code> (char é promovido automaticamente) e retornam int.</div></div>
+            <div class="ti"><div class="tin">Iterando sobre strings</div><div class="tid"><code>for (int i = 0, n = strlen(s); i &lt; n; i++)</code> — calcule strlen fora do loop! Se estiver no loop: <code>for (int i = 0; i &lt; strlen(s); i++)</code> chama strlen a cada iteração, tornando O(n) em O(n²). Um bug de performance clássico.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cb">
+      <div class="cbh"><span class="cbl">C</span><span class="cbt">caesar.c — cifra de César com argc/argv</span></div>
+      <pre><code><span class="tp">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="tp">#include</span> <span class="str">&lt;string.h&gt;</span>
+<span class="tp">#include</span> <span class="str">&lt;ctype.h&gt;</span>
+<span class="tp">#include</span> <span class="str">&lt;cs50.h&gt;</span>
+<span class="tp">#include</span> <span class="str">&lt;stdlib.h&gt;</span>   <span class="cm">// atoi()</span>
+
+<span class="kw">int</span> <span class="fn">main</span>(<span class="kw">int</span> argc, <span class="kw">char</span> *argv[])
+{
+    <span class="cm">// Verificar se exatamente 1 argumento foi passado</span>
+    <span class="kw">if</span> (argc != <span class="num">2</span>)
+    {
+        <span class="fn">printf</span>(<span class="str">"Uso: ./caesar chave\n"</span>);
+        <span class="kw">return</span> <span class="num">1</span>;   <span class="cm">// retorno != 0 indica erro</span>
+    }
+
+    <span class="kw">int</span> chave = <span class="fn">atoi</span>(argv[<span class="num">1</span>]); <span class="cm">// string → inteiro</span>
+    <span class="kw">string</span> texto = <span class="fn">get_string</span>(<span class="str">"Texto simples: "</span>);
+
+    <span class="fn">printf</span>(<span class="str">"Cifrado: "</span>);
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>, n = <span class="fn">strlen</span>(texto); i &lt; n; i++)
+    {
+        <span class="kw">char</span> c = texto[i];
+        <span class="kw">if</span> (<span class="fn">isupper</span>(c))
+            <span class="fn">printf</span>(<span class="str">"%c"</span>, (c - <span class="str">'A'</span> + chave) % <span class="num">26</span> + <span class="str">'A'</span>);
+        <span class="kw">else if</span> (<span class="fn">islower</span>(c))
+            <span class="fn">printf</span>(<span class="str">"%c"</span>, (c - <span class="str">'a'</span> + chave) % <span class="num">26</span> + <span class="str">'a'</span>);
+        <span class="kw">else</span>
+            <span class="fn">printf</span>(<span class="str">"%c"</span>, c); <span class="cm">// não-letra: mantém igual</span>
+    }
+    <span class="fn">printf</span>(<span class="str">"\n"</span>);
+}
+<span class="cm">// $ ./caesar 13
+// Texto: Hello → Uryyb   (ROT-13)</span></code></pre>
+    </div>
+
+    <div class="tblock">
+      <div class="tsec">Compilação e Debugging</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tig">⚙</div><h4>O Processo de Compilação</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">4 etapas: pré-proc → compilação → assembly → linking</div><div class="tid">Pré-processamento: substitui <code>#include</code> e <code>#define</code>. Compilação: converte C para Assembly. Assembly: converte Assembly para código de máquina (.o). Linking: combina .o files e bibliotecas no executável final. <code>clang -save-temps</code> salva cada etapa.</div></div>
+            <div class="ti"><div class="tin">Flags do compilador</div><div class="tid"><code>-o nome</code>: define nome do executável. <code>-Wall</code>: mostra todos os warnings. <code>-Wextra</code>: warnings adicionais. <code>-g</code>: inclui informação de debug. <code>-O2</code>: otimizações de performance. No CS50: <code>make</code> chama clang com as flags corretas automaticamente.</div></div>
+            <div class="ti"><div class="tin">make e Makefiles</div><div class="tid"><code>make programa</code> compila <code>programa.c</code> com as configurações corretas. Um Makefile define regras: target, dependências e comandos. O make verifica timestamps — só recompila arquivos modificados. Essencial em projetos com dezenas de arquivos.</div></div>
+            <div class="ti"><div class="tin">Erros de compilação vs warnings</div><div class="tid">Erros impedem a compilação. Warnings são suspeitos que compilam mas podem causar bugs. Trate warnings como erros — nunca ignore. Warnings comuns: variável não inicializada, comparação int/unsigned, valor de retorno ignorado.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tia">🔍</div><h4>Técnicas de Debugging</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">printf debugging</div><div class="tid">A técnica mais simples: inserir <code>printf("DEBUG: x=%i\n", x)</code> para rastrear o estado do programa. Mas imprimir demais polui a saída. Após corrigir o bug, lembre-se de remover os prints de debug — ou use uma flag <code>#define DEBUG</code> para ativá-los opcionalmente.</div></div>
+            <div class="ti"><div class="tin">debug50 — debugger interativo</div><div class="tid">O CS50 fornece <code>debug50</code> (wrapper do GDB). Permite: breakpoints (parar em linha específica), step over (executar linha a linha), step into (entrar dentro de funções), e inspecionar variáveis e memória em tempo real. Muito mais poderoso que printf.</div></div>
+            <div class="ti"><div class="tin">Rubber duck debugging</div><div class="tid">Explique o código para um pato de borracha (ou para qualquer objeto). O ato de verbalizar força você a analisar cada passo consciente e muitas vezes revela o bug antes de terminar a explicação. Funciona de verdade — programadores experientes usam essa técnica.</div></div>
+            <div class="ti"><div class="tin">valgrind — erros de memória</div><div class="tid"><code>valgrind ./programa</code> detecta: leitura/escrita fora dos limites de um array, uso de memória não inicializada, memory leaks (malloc sem free), double free. Será fundamental na Semana 4 quando usarmos ponteiros e alocação dinâmica.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex"><h4>Exercícios Práticos — Problem Set 2</h4>
+      <div class="exl">
+        <div class="ei"><div class="en">01</div><div class="et"><strong>Caesar:</strong> Implemente a cifra de César. Receba chave como argumento de linha de comando. Valide que é número positivo. Preserve maiúsculas/minúsculas e não-letras.</div></div>
+        <div class="ei"><div class="en">02</div><div class="et"><strong>Substitution:</strong> Cifra de substituição completa. Receba 26 letras únicas como chave. Mapeie cada letra do alfabeto para a posição correspondente na chave.</div></div>
+        <div class="ei"><div class="en">03</div><div class="et"><strong>Readability:</strong> Calcule o índice Coleman-Liau de legibilidade de um texto. Fórmula: <em>0.0588 × L - 0.296 × S - 15.8</em> (L=letras/100 palavras, S=frases/100 palavras).</div></div>
+        <div class="ei"><div class="en">04</div><div class="et"><strong>Wordle50:</strong> Implemente o jogo Wordle em C. 6 tentativas para adivinhar uma palavra de 5 letras. Mostre letras corretas (verde), presentes mas no lugar errado (amarelo) e ausentes (vermelho).</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SEMANA 3 ═══════════════ -->
+<div class="wc" id="s3">
+  <div class="wh" onclick="tog(this)">
+    <div class="wn">Semana 3</div>
+    <div class="wi"><h3>Algoritmos</h3><p>Busca, ordenação, recursão e notação Big O</p></div>
+    <div class="wm"><span class="badge bc">C</span><span class="wa">▶</span></div>
+  </div>
+  <div class="wb">
+    <div class="ibox">Esta é a semana sobre eficiência. Dois algoritmos podem resolver exatamente o mesmo problema — mas um pode ser um bilhão de vezes mais rápido. A notação Big O nos dá uma linguagem precisa para comparar algoritmos independente do hardware. Um bom programador não apenas escreve código correto: escreve código eficiente.</div>
+
+    <div class="tblock">
+      <div class="tsec">Complexidade de Algoritmos — Notação Big O</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tir">O</div><h4>As Classes de Complexidade</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">O(1) — Tempo Constante</div><div class="tid">O algoritmo executa no mesmo tempo independente do tamanho da entrada. Exemplos: acessar um elemento de um array por índice (<code>arr[42]</code>), inserir no início de uma lista ligada, busca em tabela hash sem colisão. O tempo não cresce com n.</div></div>
+            <div class="ti"><div class="tin">O(log n) — Logarítmico</div><div class="tid">A cada passo, a entrada é dividida por uma constante (geralmente 2). Busca binária: com 1 bilhão de itens, são apenas ~30 passos. log₂(1.000.000.000) ≈ 30. Algoritmos que "dividem e conquistam" geralmente são O(log n) ou O(n log n).</div></div>
+            <div class="ti"><div class="tin">O(n) — Linear</div><div class="tid">O tempo cresce proporcionalmente ao tamanho da entrada. Dobrou a entrada, dobrou o tempo. Exemplos: busca linear, percorrer um array, contar ocorrências de um elemento. É o melhor que podemos fazer quando precisamos examinar cada elemento pelo menos uma vez.</div></div>
+            <div class="ti"><div class="tin">O(n²) — Quadrático</div><div class="tid">Dobrou a entrada, quadruplicou o tempo. Geralmente indica loops aninhados: para cada elemento, percorre todos os outros. Bubble sort, selection sort e insertion sort são O(n²). Com 10.000 elementos: 100 milhões de operações. Evitar em dados grandes.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tib">Ω</div><h4>Melhor, Médio e Pior Caso</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">O (Big O) — pior caso</div><div class="tid">Limite superior: o algoritmo nunca será pior que isso. Busca linear: O(n) — no pior caso, o elemento está no final ou não existe. Usamos O para garantias: "não importa a entrada, este algoritmo não ultrapassará X operações".</div></div>
+            <div class="ti"><div class="tin">Ω (Omega) — melhor caso</div><div class="tid">Limite inferior: o mínimo de operações que o algoritmo precisará. Busca linear: Ω(1) — no melhor caso, o elemento está na primeira posição. Bubble sort: Ω(n) com otimização (lista já ordenada, nenhuma troca ocorre).</div></div>
+            <div class="ti"><div class="tin">Θ (Theta) — caso exato</div><div class="tid">Quando O e Ω são iguais, o algoritmo tem complexidade Θ. Exemplo: percorrer um array do início ao fim é Θ(n) — sempre n passos, independente dos dados. Selection sort é Θ(n²) — sempre n² comparações.</div></div>
+            <div class="ti"><div class="tin">Comparação prática</div><div class="tid">Para n=1.000.000: O(log n)≈20 operações, O(n)=1.000.000, O(n log n)≈20.000.000, O(n²)=1.000.000.000.000. A escolha do algoritmo determina se uma operação leva milissegundos ou horas. Hardware não compensa escolha errada de algoritmo.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tblock">
+      <div class="tsec">Algoritmos de Ordenação</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tig">↕</div><h4>Ordenação Quadrática — O(n²)</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Selection Sort — encontrar o mínimo</div><div class="tid">Para cada posição, encontra o menor elemento no restante do array e o coloca na posição atual. Sempre faz exatamente n²/2 comparações — melhor e pior caso são iguais: Θ(n²). Vantagem: faz apenas n trocas (O(n) trocas).</div></div>
+            <div class="ti"><div class="tin">Bubble Sort — trocar adjacentes</div><div class="tid">Compara pares adjacentes, trocando se estiver na ordem errada. "Bolhas" maiores sobem para o final. Pior caso: O(n²). Melhor caso com otimização (flag de swap): Ω(n) se já estiver ordenado. Intuitivo mas raramente usado na prática.</div></div>
+            <div class="ti"><div class="tin">Insertion Sort — inserir na posição</div><div class="tid">Constrói a lista ordenada incrementalmente: pega um elemento por vez e o insere na posição correta entre os já ordenados. Melhor caso Ω(n) para lista quase-ordenada. Na prática é muito eficiente para listas pequenas (&lt;20 elementos).</div></div>
+            <div class="ti"><div class="tin">Quando usar algoritmos quadráticos?</div><div class="tid">Para n &lt; 50, a diferença é imperceptível. Insertion sort bate merge sort em listas pequenas por causa da constante menor e melhor uso do cache. Implementações reais como o std::sort do C++ usam insertion sort para partições pequenas do quicksort.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tia">⚡</div><h4>Merge Sort — O(n log n)</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Divide e conquista</div><div class="tid">Divida o array ao meio recursivamente até ter subarrays de tamanho 1 (já "ordenados"). Depois, mescle os subarrays ordenados. Mesclar dois arrays já ordenados é O(n). A recursão tem profundidade log n. Total: O(n log n) em todos os casos — melhor e pior iguais: Θ(n log n).</div></div>
+            <div class="ti"><div class="tin">Por que merge é eficiente?</div><div class="tid">Na mesclagem, cada comparação "elimina" um elemento das possibilidades. Nunca comparamos o mesmo par duas vezes — ao contrário do bubble sort. Com 8 elementos: merge sort faz ~24 comparações, bubble sort faz ~28. Com 1 milhão, a diferença é astronomicamente maior.</div></div>
+            <div class="ti"><div class="tin">Custo de memória</div><div class="tid">Merge sort precisa de O(n) de memória extra para os arrays temporários na mesclagem. Selection e bubble sort são O(1) de memória extra (in-place). Em sistemas com pouca RAM, isso importa. Quick sort é O(n log n) médio e O(1) de memória extra — por isso é preferido na prática.</div></div>
+            <div class="ti"><div class="tin">Estabilidade</div><div class="tid">Um algoritmo de ordenação é estável se mantém a ordem relativa de elementos iguais. Merge sort é estável. Quick sort na implementação padrão não é. Importa quando você ordena objetos por múltiplos critérios (ex: nome e depois sobrenome).</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cb">
+      <div class="cbh"><span class="cbl">C</span><span class="cbt">merge_sort.c — divide e conquista</span></div>
+      <pre><code><span class="kw">void</span> <span class="fn">merge</span>(<span class="kw">int</span> *arr, <span class="kw">int</span> n)
+{
+    <span class="kw">if</span> (n &lt;= <span class="num">1</span>) <span class="kw">return</span>;         <span class="cm">// caso base: tamanho 1 já está "ordenado"</span>
+
+    <span class="kw">int</span> meio = n / <span class="num">2</span>;
+
+    <span class="cm">// Dividir em dois subarrays</span>
+    <span class="kw">int</span> *esq = <span class="fn">malloc</span>(meio * <span class="kw">sizeof</span>(<span class="kw">int</span>));
+    <span class="kw">int</span> *dir = <span class="fn">malloc</span>((n - meio) * <span class="kw">sizeof</span>(<span class="kw">int</span>));
+
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; meio; i++) esq[i] = arr[i];
+    <span class="kw">for</span> (<span class="kw">int</span> i = meio; i &lt; n; i++) dir[i - meio] = arr[i];
+
+    <span class="cm">// Ordenar recursivamente cada metade</span>
+    <span class="fn">merge</span>(esq, meio);
+    <span class="fn">merge</span>(dir, n - meio);
+
+    <span class="cm">// Mesclar os dois subarrays ordenados</span>
+    <span class="kw">int</span> i = <span class="num">0</span>, j = <span class="num">0</span>, k = <span class="num">0</span>;
+    <span class="kw">while</span> (i &lt; meio && j &lt; n - meio)
+        arr[k++] = (esq[i] &lt;= dir[j]) ? esq[i++] : dir[j++];
+    <span class="kw">while</span> (i &lt; meio) arr[k++] = esq[i++];
+    <span class="kw">while</span> (j &lt; n - meio) arr[k++] = dir[j++];
+
+    <span class="fn">free</span>(esq); <span class="fn">free</span>(dir);
+}
+<span class="cm">/* Trace com [5, 2, 4, 1, 3]:
+   Divide: [5,2] [4,1,3]
+   Divide: [5][2]  [4][1,3]
+   Divide:          [4][1][3]
+   Merge:  [2,5]   [1,4] [3]
+   Merge:  [2,5]   [1,3,4]
+   Merge:  [1,2,3,4,5]          */</span></code></pre>
+    </div>
+
+    <div class="tblock">
+      <div class="tsec">Recursão</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tip">↺</div><h4>Pensando Recursivamente</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Os dois ingredientes obrigatórios</div><div class="tid"><strong>Caso base</strong>: condição que para a recursão sem chamar a função novamente. Sem isso, recursão infinita → stack overflow. <strong>Caso recursivo</strong>: problema reduzido para uma versão menor de si mesmo, convergindo em direção ao caso base.</div></div>
+            <div class="ti"><div class="tin">Stack de chamadas</div><div class="tid">Cada chamada recursiva adiciona um frame à call stack. <code>fatorial(5)</code> → fatorial(4) → fatorial(3) → fatorial(2) → fatorial(1). Cada frame guarda os parâmetros e variáveis locais. A stack tem limite (~1-8 MB) — recursão profunda demais causa stack overflow.</div></div>
+            <div class="ti"><div class="tin">Recursão vs Iteração</div><div class="tid">Qualquer recursão pode ser convertida para iteração (com uma pilha explícita se necessário). Recursão é mais legível para problemas naturalmente recursivos (árvores, divisão e conquista). Iteração é mais eficiente (sem overhead de chamadas de função e frames de stack).</div></div>
+            <div class="ti"><div class="tin">Exemplos clássicos</div><div class="tid">Fatorial: <code>n! = n × (n-1)!</code>, base: <code>0! = 1</code>. Fibonacci: <code>fib(n) = fib(n-1) + fib(n-2)</code>, base: <code>fib(0)=0, fib(1)=1</code>. Cuidado: <code>fib</code> recursivo ingênuo é O(2ⁿ) — exponencial! Memoization ou iteração resolve isso.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tit">⚖</div><h4>Eleições — Algoritmos em Contexto</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Plurality — mais votos vence</div><div class="tid">Cada eleitor vota em um candidato. Vence quem tiver mais votos. Implementação: array de candidatos com contador. Para cada voto, incrementa o contador do candidato. No final, percorre e encontra o máximo. Pode resultar em vitória com minoria de votos.</div></div>
+            <div class="ti"><div class="tin">Runoff — eliminação progressiva</div><div class="tid">Eleitores ranqueiam candidatos. Se ninguém tem maioria (>50%), elimina o candidato com menos votos e redistribui os votos de quem o tinha em 1º lugar para o 2º colocado desses eleitores. Repete até alguém ter maioria. Mais justo, mais complexo.</div></div>
+            <div class="ti"><div class="tin">Tideman — Ranked Pairs</div><div class="tid">O algoritmo mais complexo do PS3. Para cada par de candidatos, determina quem venceria em confronto direto. Ordena os pares por margem de vitória. Adiciona cada par como aresta num grafo — mas ignora se criaria ciclo (preserva transitividade). O candidato sem derrota vence.</div></div>
+            <div class="ti"><div class="tin">Por que isso importa?</div><div class="tid">Sistemas eleitorais são algoritmos com consequências reais. O método de votação determina quem ganha. Plurality favorece bipartidarismo (efeito Duverger). Ranked choice permite que candidatos "menores" sejam considerados sem "desperdiçar" votos.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex"><h4>Exercícios Práticos — Problem Set 3</h4>
+      <div class="exl">
+        <div class="ei"><div class="en">01</div><div class="et"><strong>Sort:</strong> Dados três arquivos com arrays ordenados de formas diferentes (random, reversed, sorted), determine qual algoritmo foi usado medindo o número de comparações.</div></div>
+        <div class="ei"><div class="en">02</div><div class="et"><strong>Plurality:</strong> Implemente eleição por pluralidade. Receba candidatos como args, colete votos, declare vencedor(es) com mais votos (pode haver empate).</div></div>
+        <div class="ei"><div class="en">03</div><div class="et"><strong>Tideman:</strong> Implemente o algoritmo Condorcet de Ranked Pairs. Crie grafo de vitórias, ordene por margem, adicione arestas sem criar ciclos, encontre a "source" (sem derrota).</div></div>
+        <div class="ei"><div class="en">04</div><div class="et"><strong>Análise:</strong> Implemente bubble sort com contador de trocas. Execute com [1,2,3,4,5], [5,4,3,2,1] e random. Verifique que lista já ordenada tem Ω(n) e revertida tem O(n²).</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SEMANA 4 ═══════════════ -->
+<div class="wc" id="s4">
+  <div class="wh" onclick="tog(this)">
+    <div class="wn">Semana 4</div>
+    <div class="wi"><h3>Memória</h3><p>Ponteiros, alocação dinâmica, stack vs heap, manipulação de arquivos</p></div>
+    <div class="wm"><span class="badge bc">C</span><span class="wa">▶</span></div>
+  </div>
+  <div class="wb">
+    <div class="ibox">Ponteiros são o conceito mais temido em C — e com razão. Mas entendê-los é o que sepera programadores que usam linguagens daqueles que as compreendem de verdade. Cada variável ocupa um endereço físico na RAM. Um ponteiro é simplesmente um dado que contém esse endereço. Tudo em computação — listas ligadas, árvores, parâmetros por referência, buffers de rede — se reduz a ponteiros.</div>
+
+    <div class="tblock">
+      <div class="tsec">Ponteiros — Endereços de Memória</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tir">*</div><h4>Fundamentos de Ponteiros</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">O que é um ponteiro</div><div class="tid">Um ponteiro é uma variável que armazena um endereço de memória. Assim como <code>int x = 5</code> armazena o valor 5, <code>int *p = &x</code> armazena o endereço onde x vive na RAM (algo como 0x7ffd4a1c). <code>*</code> na declaração indica que p é um ponteiro para int.</div></div>
+            <div class="ti"><div class="tin">Operadores & e *</div><div class="tid"><code>&x</code> (address-of): retorna o endereço de memória de x. <code>*p</code> (dereference): acessa o valor no endereço apontado. Se <code>p = &x</code>, então <code>*p == x</code>. Modificar <code>*p</code> modifica x diretamente. Isso é passagem por referência manual em C.</div></div>
+            <div class="ti"><div class="tin">NULL — ponteiro nulo</div><div class="tid">NULL é um ponteiro que não aponta para nada (endereço 0). Sempre inicialize ponteiros: <code>int *p = NULL</code>. Tentar desreferenciar NULL (<code>*p</code> quando p==NULL) causa segmentation fault. Verifique <code>if (p != NULL)</code> antes de usar. É como tentar ir para o endereço "nenhum" — o SO bloqueia.</div></div>
+            <div class="ti"><div class="tin">Aritmética de ponteiros</div><div class="tid"><code>p + 1</code> não soma 1 ao endereço — soma <code>sizeof(*p)</code>. Para <code>int *p</code>, p+1 avança 4 bytes. Para <code>char *p</code>, avança 1 byte. Por isso <code>arr[i]</code> e <code>*(arr + i)</code> são idênticos — é como o compilador interpreta a indexação de arrays.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tib">RAM</div><h4>Stack e Heap</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Stack — memória automática</div><div class="tid">Variáveis locais vivem na stack. A memória é alocada automaticamente quando a função é chamada e liberada quando ela retorna — sem gerenciamento manual. A stack tem tamanho limitado (~1-8 MB). Arrays grandes na stack causam stack overflow antes mesmo de recursão profunda.</div></div>
+            <div class="ti"><div class="tin">Heap — memória dinâmica</div><div class="tid">Memória que você aloca e libera manualmente com <code>malloc</code>/<code>free</code>. Persiste até você liberar — não desaparece quando a função retorna. Pode ser muito maior que a stack. O gerenciamento inadequado causa memory leaks (memória nunca liberada) e dangling pointers (ponteiros para memória já liberada).</div></div>
+            <div class="ti"><div class="tin">malloc — alocar memória</div><div class="tid"><code>int *arr = malloc(n * sizeof(int))</code> aloca n inteiros no heap e retorna um ponteiro. SEMPRE verifique se retornou NULL (sem memória disponível). O conteúdo é lixo — não inicializado. Use <code>calloc(n, sizeof(int))</code> para inicializar tudo a zero.</div></div>
+            <div class="ti"><div class="tin">free — liberar memória</div><div class="tid">Todo <code>malloc</code> deve ter um <code>free</code> correspondente. Sem isso: memory leak. Chamar <code>free</code> duas vezes no mesmo ponteiro: double free (comportamento indefinido). Após <code>free(p)</code>, faça <code>p = NULL</code> para evitar dangling pointer. Use valgrind para detectar violações.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cb">
+      <div class="cbh"><span class="cbl">C</span><span class="cbt">ponteiros_e_memoria.c — exemplos fundamentais</span></div>
+      <pre><code><span class="tp">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="tp">#include</span> <span class="str">&lt;stdlib.h&gt;</span>
+
+<span class="cm">// Swap por referência — a versão que FUNCIONA</span>
+<span class="kw">void</span> <span class="fn">swap</span>(<span class="kw">int</span> *a, <span class="kw">int</span> *b)
+{
+    <span class="kw">int</span> temp = *a;
+    *a = *b;         <span class="cm">// modifica o valor original via ponteiro</span>
+    *b = temp;
+}
+
+<span class="kw">int</span> <span class="fn">main</span>(<span class="kw">void</span>)
+{
+    <span class="kw">int</span> x = <span class="num">10</span>, y = <span class="num">20</span>;
+    <span class="fn">printf</span>(<span class="str">"Antes: x=%i y=%i\n"</span>, x, y); <span class="cm">// 10 20</span>
+    <span class="fn">swap</span>(&x, &y);   <span class="cm">// passa endereços</span>
+    <span class="fn">printf</span>(<span class="str">"Depois: x=%i y=%i\n"</span>, x, y); <span class="cm">// 20 10</span>
+
+    <span class="cm">// Alocação dinâmica de array</span>
+    <span class="kw">int</span> n = <span class="num">5</span>;
+    <span class="kw">int</span> *arr = <span class="fn">malloc</span>(n * <span class="kw">sizeof</span>(<span class="kw">int</span>));
+    <span class="kw">if</span> (arr == <span class="tp">NULL</span>) <span class="kw">return</span> <span class="num">1</span>;   <span class="cm">// sempre verificar!</span>
+
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; n; i++) arr[i] = i * i;
+
+    <span class="cm">// arr[2] == *(arr + 2) — idênticos</span>
+    <span class="fn">printf</span>(<span class="str">"%i %i\n"</span>, arr[<span class="num">2</span>], *(arr + <span class="num">2</span>)); <span class="cm">// 4 4</span>
+
+    <span class="fn">free</span>(arr);
+    arr = <span class="tp">NULL</span>;    <span class="cm">// boa prática: evita dangling pointer</span>
+}</code></pre>
+    </div>
+
+    <div class="tblock">
+      <div class="tsec">I/O de Arquivos e Manipulação de Imagens</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tig">📄</div><h4>Operações com Arquivos</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">fopen — abrir arquivo</div><div class="tid"><code>FILE *f = fopen("foto.bmp", "rb")</code>. Modos: "r" (ler), "w" (escrever, sobrescreve), "a" (append), "b" (binário). Retorna NULL se o arquivo não existir ou não houver permissão. Sempre verifique antes de usar. Feche com <code>fclose(f)</code> — libera recursos do SO.</div></div>
+            <div class="ti"><div class="tin">fread e fwrite — I/O binário</div><div class="tid"><code>fread(&pixel, sizeof(RGBTRIPLE), 1, f)</code> lê sizeof(RGBTRIPLE) bytes do arquivo para a estrutura pixel. Retorna o número de itens lidos — se menor que o esperado, chegou ao fim do arquivo ou houve erro. Essencial para formatos binários como BMP, WAV, JPEG.</div></div>
+            <div class="ti"><div class="tin">Estruturas — structs</div><div class="tid">Para ler/escrever dados estruturados de arquivos binários, definimos structs com o mesmo layout de bytes do formato. Para BMP: <code>typedef struct { uint8_t rgbtBlue; uint8_t rgbtGreen; uint8_t rgbtRed; } RGBTRIPLE</code>. Atenção ao padding e alinhamento do compilador.</div></div>
+            <div class="ti"><div class="tin">fseek e ftell — navegação</div><div class="tid"><code>fseek(f, offset, SEEK_SET)</code> posiciona o cursor no arquivo. <code>SEEK_SET</code>=início, <code>SEEK_CUR</code>=posição atual, <code>SEEK_END</code>=fim. <code>ftell(f)</code> retorna a posição atual. Permite "pular" para qualquer parte do arquivo sem ler sequencialmente.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tia">🖼</div><h4>Manipulação de Imagens BMP</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Formato BMP — estrutura</div><div class="tid">Um arquivo BMP tem: BITMAPFILEHEADER (14 bytes, metadados do arquivo), BITMAPINFOHEADER (40 bytes, dimensões e formato), e pixels RGB (3 bytes cada). Cada linha tem padding para ser múltipla de 4 bytes. Para ler: leia o header, depois leia pixel por pixel.</div></div>
+            <div class="ti"><div class="tin">Filtro Grayscale</div><div class="tid">Para converter para tons de cinza, substitua cada pixel pela média de seus canais RGB: <code>avg = round(0.299*R + 0.587*G + 0.114*B)</code>. Os pesos são diferentes porque o olho humano é mais sensível ao verde. Defina R=G=B=avg. A imagem perde cor mas mantém luminância.</div></div>
+            <div class="ti"><div class="tin">Filtro Blur (desfoque)</div><div class="tid">Box blur: substitua cada pixel pela média dos seus 8 vizinhos (incluindo ele mesmo). Pixels nas bordas têm menos vizinhos — use apenas os disponíveis. Algoritmo: crie cópia da imagem, leia da cópia mas escreva na original. Sem isso, pixels já modificados afetam os cálculos seguintes.</div></div>
+            <div class="ti"><div class="tin">Recuperação de JPEG</div><div class="tid">Arquivos JPEG sempre começam com os bytes <code>0xff 0xd8 0xff</code>. Ao percorrer uma imagem de cartão de memória byte a byte, ao encontrar esses 3 bytes seguidos de <code>0xe0</code> ou <code>0xe1</code>, você encontrou o início de um JPEG. Grave tudo até o próximo JPEG encontrado. Assim fotos "deletadas" são recuperadas.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cl cl-w"><strong>armadilha clássica</strong>Após chamar <code>free(p)</code>, p ainda contém o endereço antigo — é um "dangling pointer". Se você desreferenciar p depois do free, lê/escreve memória que pode ter sido realocada para outro dado. Sempre faça <code>p = NULL</code> após free para converter em NULL pointer (que causa segfault previsível se acidentalmente desreferenciado).</div>
+
+    <div class="ex"><h4>Exercícios Práticos — Problem Set 4</h4>
+      <div class="exl">
+        <div class="ei"><div class="en">01</div><div class="et"><strong>Volume:</strong> Modifique o volume de um arquivo de áudio WAV. Leia o header sem alterar, depois multiplique cada amostra de 16 bits por um fator float fornecido pelo usuário.</div></div>
+        <div class="ei"><div class="en">02</div><div class="et"><strong>Filter (fácil):</strong> Aplique filtros numa imagem BMP: grayscale (tons de cinza), sepia (efeito vintage), reflect (espelhar horizontalmente) e blur (desfoque gaussiano).</div></div>
+        <div class="ei"><div class="en">03</div><div class="et"><strong>Filter (difícil):</strong> Implemente além dos anteriores o filtro de detecção de bordas usando o operador Sobel — calcula o gradiente horizontal e vertical de cada pixel.</div></div>
+        <div class="ei"><div class="en">04</div><div class="et"><strong>Recover:</strong> Dado um arquivo RAW de 512 bytes por bloco de um cartão de memória, recupere todos os arquivos JPEG detectando a assinatura <em>0xff 0xd8 0xff 0xe_</em> em cada bloco.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SEMANA 5 ═══════════════ -->
+<div class="wc" id="s5">
+  <div class="wh" onclick="tog(this)">
+    <div class="wn">Semana 5</div>
+    <div class="wi"><h3>Estruturas de Dados</h3><p>Listas ligadas, pilhas, filas, árvores BST, tabelas hash e tries</p></div>
+    <div class="wm"><span class="badge bc">C</span><span class="wa">▶</span></div>
+  </div>
+  <div class="wb">
+    <div class="ibox">Arrays têm um problema fundamental: tamanho fixo e inserção cara (O(n) para manter ordem). Estruturas de dados dinâmicas resolvem isso, mas com trade-offs. Não existe "a melhor estrutura de dados" — cada problema tem uma estrutura ideal. Aprender quando usar o quê é tão importante quanto saber implementar.</div>
+
+    <div class="tblock">
+      <div class="tsec">Listas Ligadas</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tir">→</div><h4>Lista Simplesmente Ligada</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Estrutura do nó</div><div class="tid"><code>typedef struct node { int val; struct node *next; } node;</code>. Cada nó contém um dado e um ponteiro para o próximo. O último nó aponta para NULL. A lista em si é apenas um ponteiro para o primeiro nó (a "cabeça") — se esse ponteiro for NULL, a lista está vazia.</div></div>
+            <div class="ti"><div class="tin">Inserção no início — O(1)</div><div class="tid">Crie um novo nó, faça seu <code>next</code> apontar para a cabeça atual, depois atualize a cabeça para o novo nó. Três passos, independente do tamanho da lista. Muito mais eficiente que array (O(n) pois precisa deslocar elementos). Porém, a lista fica em ordem inversa de inserção.</div></div>
+            <div class="ti"><div class="tin">Busca — O(n)</div><div class="tid">Percorra a lista com um ponteiro temporário: <code>for (node *tmp = head; tmp != NULL; tmp = tmp->next)</code>. Diferente de array, não há acesso direto pelo índice. Para encontrar o 5º elemento, você precisa percorrer os 4 anteriores. Isso é O(n) sempre.</div></div>
+            <div class="ti"><div class="tin">Liberação correta de memória</div><div class="tid">Para liberar uma lista ligada, não basta <code>free(head)</code> — isso apenas libera o primeiro nó, os demais ficam no heap: memory leak. A forma correta: salve o próximo antes de liberar o atual: <code>while(head){node *tmp=head->next; free(head); head=tmp;}</code></div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tib">⇌</div><h4>Pilha (Stack) e Fila (Queue)</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Stack — LIFO (Last In, First Out)</div><div class="tid">O último a entrar é o primeiro a sair — como uma pilha de pratos. Operações: <code>push</code> (adiciona no topo) e <code>pop</code> (remove do topo), ambas O(1). Usos: undo/redo em editores, avaliação de expressões matemáticas, call stack do próprio programa, backtracking em labirintos.</div></div>
+            <div class="ti"><div class="tin">Queue — FIFO (First In, First Out)</div><div class="tid">O primeiro a entrar é o primeiro a sair — como fila de banco. Operações: <code>enqueue</code> (adiciona no fim) e <code>dequeue</code> (remove do início). Com lista ligada, ambas O(1) mantendo ponteiro para início e fim. Usos: filas de impressão, BFS em grafos, buffers de rede.</div></div>
+            <div class="ti"><div class="tin">Implementar com array circular</div><div class="tid">Queues podem ser implementadas com array circular para evitar o custo de deslocar elementos. Mantenha índices <code>head</code> e <code>tail</code>. Enqueue: <code>arr[tail++ % n] = val</code>. Dequeue: <code>val = arr[head++ % n]</code>. O módulo faz o array "circular".</div></div>
+            <div class="ti"><div class="tin">Casos de uso na prática</div><div class="tid">Stack: o compilador usa pilha para analisar expressões aritméticas e verificar parênteses balanceados. Queue: o SO usa filas para agendar processos. Seu terminal funciona como fila de comandos. Roteadores usam filas para priorizar pacotes de rede.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cb">
+      <div class="cbh"><span class="cbl">C</span><span class="cbt">linked_list.c — operações completas</span></div>
+      <pre><code><span class="kw">typedef struct</span> <span class="tp">node</span> { <span class="kw">int</span> val; <span class="kw">struct</span> <span class="tp">node</span> *next; } <span class="tp">node</span>;
+
+<span class="cm">// Inserir no início: O(1)</span>
+<span class="tp">node</span> *<span class="fn">prepend</span>(<span class="tp">node</span> *head, <span class="kw">int</span> val)
+{
+    <span class="tp">node</span> *n = <span class="fn">malloc</span>(<span class="kw">sizeof</span>(<span class="tp">node</span>));
+    <span class="kw">if</span> (!n) <span class="kw">return</span> head;  <span class="cm">// sem memória</span>
+    n->val = val;
+    n->next = head;       <span class="cm">// novo nó aponta para a lista atual</span>
+    <span class="kw">return</span> n;             <span class="cm">// novo nó é a nova cabeça</span>
+}
+
+<span class="cm">// Buscar um valor: O(n)</span>
+<span class="kw">bool</span> <span class="fn">contains</span>(<span class="tp">node</span> *head, <span class="kw">int</span> val)
+{
+    <span class="kw">for</span> (<span class="tp">node</span> *cur = head; cur; cur = cur->next)
+        <span class="kw">if</span> (cur->val == val) <span class="kw">return</span> <span class="cn">true</span>;
+    <span class="kw">return</span> <span class="cn">false</span>;
+}
+
+<span class="cm">// Liberar toda a lista</span>
+<span class="kw">void</span> <span class="fn">free_list</span>(<span class="tp">node</span> *head)
+{
+    <span class="kw">while</span> (head)
+    {
+        <span class="tp">node</span> *next = head->next; <span class="cm">// salva próximo ANTES de liberar</span>
+        <span class="fn">free</span>(head);
+        head = next;
+    }
+}
+
+<span class="kw">int</span> <span class="fn">main</span>(<span class="kw">void</span>)
+{
+    <span class="tp">node</span> *lista = <span class="tp">NULL</span>;
+    lista = <span class="fn">prepend</span>(lista, <span class="num">30</span>); <span class="cm">// [30]</span>
+    lista = <span class="fn">prepend</span>(lista, <span class="num">20</span>); <span class="cm">// [20→30]</span>
+    lista = <span class="fn">prepend</span>(lista, <span class="num">10</span>); <span class="cm">// [10→20→30]</span>
+    <span class="fn">free_list</span>(lista);
+}</code></pre>
+    </div>
+
+    <div class="tblock">
+      <div class="tsec">Árvores, Tabelas Hash e Tries</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tig">🌳</div><h4>Árvore Binária de Busca (BST)</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Propriedade BST</div><div class="tid">Para cada nó: todos os valores na subárvore esquerda são menores, todos na direita são maiores. Isso garante que busca, inserção e remoção são O(log n) em árvores balanceadas. Mesma lógica da busca binária, mas agora como estrutura de dados dinâmica.</div></div>
+            <div class="ti"><div class="tin">Traversals — percursos</div><div class="tid"><strong>In-order</strong> (esquerda, raiz, direita): visita em ordem crescente. <strong>Pre-order</strong> (raiz, esquerda, direita): útil para copiar/serializar a árvore. <strong>Post-order</strong> (esquerda, direita, raiz): útil para deletar a árvore (libera filhos antes do pai). Todos são implementações recursivas elegantes.</div></div>
+            <div class="ti"><div class="tin">Pior caso — árvore degenerada</div><div class="tid">Se você inserir elementos já ordenados (1, 2, 3, 4, 5...) numa BST, ela vira uma lista ligada! Cada novo elemento vai sempre para a direita. O(log n) vira O(n). Árvores auto-balanceadas (AVL, Red-Black) resolvem isso mas têm implementação complexa.</div></div>
+            <div class="ti"><div class="tin">Heap — estrutura especial</div><div class="tid">Heap é uma árvore binária que garante: o pai é sempre maior (max-heap) ou menor (min-heap) que os filhos. Usada para implementar filas de prioridade. Inserção: O(log n). Remoção do máximo/mínimo: O(log n). Base do algoritmo Heap Sort e do djikstra.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tia">#</div><h4>Tabelas Hash e Tries</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Função de hash</div><div class="tid">Uma função que mapeia uma chave para um índice de array. Boa função: distribui uniformemente, rápida de calcular, determinística. Exemplo simples: <code>hash = (tolower(word[0]) - 'a')</code> — distribui por letra inicial. Existem funções sofisticadas como djb2, MurmurHash, FNV.</div></div>
+            <div class="ti"><div class="tin">Colisões e chaining</div><div class="tid">Colisão: duas chaves diferentes geram o mesmo hash. Resolução por chaining: cada bucket é uma lista ligada. Inserção: sempre O(1) (adiciona no início da lista do bucket). Busca: O(1) em média se a função hash é boa, O(n) no pior caso (todos colidiram no mesmo bucket).</div></div>
+            <div class="ti"><div class="tin">Trie — árvore de prefixos</div><div class="tid">Cada nó representa um caractere. O caminho da raiz até um nó "folha" forma uma palavra. Busca de uma palavra de k letras: O(k) — independente de quantas palavras existem na trie! Ideal para autocomplete, verificação ortográfica, roteamento IP (cada octeto é um nível).</div></div>
+            <div class="ti"><div class="tin">Comparação: Hash vs Trie vs BST</div><div class="tid">Hash: O(1) busca/inserção, usa mais memória, ordem indefinida. BST: O(log n), usa menos memória, mantém ordem. Trie: O(k) onde k=tamanho da chave, excelente para strings com prefixos comuns, alto uso de memória. A escolha depende do problema.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex"><h4>Exercícios Práticos — Problem Set 5</h4>
+      <div class="exl">
+        <div class="ei"><div class="en">01</div><div class="et"><strong>Speller:</strong> Implemente um verificador ortográfico. Carregue um dicionário numa tabela hash. Para cada palavra do texto, verifique se está no dicionário em O(1) esperado. Meça performance vs a implementação de referência.</div></div>
+        <div class="ei"><div class="en">02</div><div class="et"><strong>Otimização de hash:</strong> Experimente diferentes funções hash (primeira letra, soma de ASCII, djb2). Compare o número de colisões e o tempo total de busca com o dicionário de ~140.000 palavras.</div></div>
+        <div class="ei"><div class="en">03</div><div class="et"><strong>BST:</strong> Implemente uma BST com inserção, busca e traversal in-order. Verifique que a traversal in-order produz os elementos em ordem crescente.</div></div>
+        <div class="ei"><div class="en">04</div><div class="et"><strong>Análise de estruturas:</strong> Para cada operação (inserção, busca, remoção), construa uma tabela comparando a complexidade de: array, lista ligada, BST balanceada e tabela hash.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SEMANA 6 ═══════════════ -->
+<div class="wc" id="s6">
+  <div class="wh" onclick="tog(this)">
+    <div class="wn">Semana 6</div>
+    <div class="wi"><h3>Python</h3><p>Alto nível, tipagem dinâmica, bibliotecas e automação</p></div>
+    <div class="wm"><span class="badge bp">Python</span><span class="wa">▶</span></div>
+  </div>
+  <div class="wb">
+    <div class="ibox">Depois de semanas em C, Python vai parecer mágico. Gerenciamento automático de memória, tipagem dinâmica, listas que crescem sozinhas, strings que se concatenam com +. Python foi criado por Guido van Rossum em 1991 com a filosofia de que código deveria ser legível como prosa. O objetivo desta semana é reescrever soluções de C em Python e apreciar o quanto é mais simples — sem abrir mão da compreensão do que acontece por baixo.</div>
+
+    <div class="tblock">
+      <div class="tsec">Python vs C — Diferenças Fundamentais</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tir">py</div><h4>Sintaxe e Tipos</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Sem declaração de tipos</div><div class="tid">Em C: <code>int x = 5;</code>. Em Python: <code>x = 5</code>. O Python infere o tipo pelo valor atribuído. Tipos existem, mas são das variáveis em tempo de execução, não das declarações. Python 3.5+ tem type hints (<code>x: int = 5</code>) para documentação, mas são opcionais e não verificados pelo interpretador.</div></div>
+            <div class="ti"><div class="tin">Indentação define blocos</div><div class="tid">Em vez de <code>{ }</code>, Python usa indentação (tipicamente 4 espaços) para definir blocos. <code>if x:</code> seguido de linha indentada é o bloco. Isso força código visualmente organizado — mas uma indentação errada muda a lógica silenciosamente. Use apenas espaços ou apenas tabs, nunca misture.</div></div>
+            <div class="ti"><div class="tin">Tipagem dinâmica e duck typing</div><div class="tid">Uma variável pode mudar de tipo: <code>x = 5; x = "cinco"</code> é válido. Duck typing: "se anda como pato e grasna como pato, é um pato". Se um objeto tem os métodos necessários, funciona — você não precisa herdar de uma classe específica. Isso torna Python extremamente flexível.</div></div>
+            <div class="ti"><div class="tin">Garbage collection automático</div><div class="tid">Python usa contagem de referências + coletor de ciclos. Sem malloc/free manual. Quando nenhuma variável referencia um objeto, ele é coletado automaticamente. Isso elimina memory leaks e dangling pointers — mas há um custo de performance. Para sistemas de alto desempenho, C/C++/Rust são preferidos.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tib">[ ]{ }</div><h4>Tipos e Estruturas Nativas</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">list — array dinâmico</div><div class="tid"><code>[1, 2, 3]</code> ou <code>list()</code>. Métodos: <code>append(x)</code> adiciona ao fim O(1), <code>insert(i, x)</code> O(n), <code>remove(x)</code> O(n), <code>pop()</code> O(1) do fim. Suporta tipos mistos: <code>[1, "dois", 3.0, True]</code>. Slicing: <code>lst[1:3]</code> retorna cópia dos índices 1 e 2.</div></div>
+            <div class="ti"><div class="tin">dict — tabela hash nativa</div><div class="tid"><code>{"chave": "valor"}</code>. Busca, inserção e remoção: O(1) esperado. Python 3.7+ garante ordem de inserção. Iteração: <code>for chave, valor in d.items()</code>. Dict comprehension: <code>{k: v*2 for k, v in d.items()}</code>. Extremamente versátil — substitui structs, objetos simples e tabelas hash de C.</div></div>
+            <div class="ti"><div class="tin">tuple — imutável</div><div class="tid"><code>(1, 2, 3)</code>. Como lista mas não pode ser modificado após criação. Uso: retornar múltiplos valores de funções, chaves de dicionários (listas não podem ser chaves). Desempacotamento: <code>x, y = (10, 20)</code> atribui 10 a x e 20 a y. Também: <code>a, *resto = [1, 2, 3, 4]</code>.</div></div>
+            <div class="ti"><div class="tin">set — conjunto sem duplicatas</div><div class="tid"><code>{1, 2, 3}</code> ou <code>set()</code>. Busca/inserção: O(1). Operações de conjunto: <code>a | b</code> (união), <code>a & b</code> (interseção), <code>a - b</code> (diferença). Use quando precisar eliminar duplicatas: <code>list(set(lista_com_dup))</code>. Mas sets não têm ordem garantida.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cb">
+      <div class="cbh"><span class="cbl">Python</span><span class="cbt">python_vs_c.py — comparação lado a lado</span></div>
+      <pre><code><span class="cm"># Em C: int notas[5] = {90, 85, 92, 78, 95};</span>
+<span class="cm"># Em Python:</span>
+notas = [<span class="num">90</span>, <span class="num">85</span>, <span class="num">92</span>, <span class="num">78</span>, <span class="num">95</span>]
+
+<span class="cm"># List comprehension — sintaxe poderosa</span>
+aprovados = [n <span class="kw">for</span> n <span class="kw">in</span> notas <span class="kw">if</span> n >= <span class="num">80</span>]
+dobradas = [n * <span class="num">2</span> <span class="kw">for</span> n <span class="kw">in</span> notas]
+<span class="fn">print</span>(aprovados)  <span class="cm"># [90, 85, 92, 95]</span>
+
+<span class="cm"># Funções de alta ordem</span>
+media = <span class="fn">sum</span>(notas) / <span class="fn">len</span>(notas)
+maximo = <span class="fn">max</span>(notas)
+ordenadas = <span class="fn">sorted</span>(notas, reverse=<span class="cn">True</span>)
+
+<span class="cm"># Dict — substitui structs de C</span>
+aluno = {<span class="str">"nome"</span>: <span class="str">"Ana"</span>, <span class="str">"notas"</span>: notas, <span class="str">"media"</span>: media}
+
+<span class="cm"># Desempacotamento e f-strings</span>
+<span class="fn">print</span>(<span class="str">f"{aluno['nome']}: média {aluno['media']:.1f}"</span>)
+
+<span class="cm"># Ler arquivo CSV de uma vez</span>
+<span class="kw">import</span> csv
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"dados.csv"</span>) <span class="kw">as</span> f:
+    reader = csv.<span class="fn">DictReader</span>(f)
+    dados = <span class="fn">list</span>(reader)  <span class="cm"># lista de dicts!</span>
+
+<span class="cm"># Exception handling</span>
+<span class="kw">try</span>:
+    x = <span class="kw">int</span>(<span class="fn">input</span>(<span class="str">"Número: "</span>))
+<span class="kw">except</span> <span class="tp">ValueError</span>:
+    <span class="fn">print</span>(<span class="str">"Isso não é um número válido"</span>)</code></pre>
+    </div>
+
+    <div class="tblock">
+      <div class="tsec">Funções e Módulos</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tig">def</div><h4>Funções Avançadas</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Parâmetros padrão e keyword args</div><div class="tid"><code>def greet(nome, saudacao="Olá"):</code> — <code>saudacao</code> tem valor padrão. Chamada: <code>greet("Ana")</code> ou <code>greet(saudacao="Oi", nome="Ana")</code> — keyword args podem vir em qualquer ordem. Parâmetros com padrão devem vir depois dos sem padrão.</div></div>
+            <div class="ti"><div class="tin">*args e **kwargs</div><div class="tid"><code>*args</code> captura argumentos posicionais extras como tuple: <code>def soma(*nums): return sum(nums)</code>. <code>**kwargs</code> captura keyword args extras como dict: <code>def config(**opts): print(opts)</code>. Podem ser combinados: <code>def f(a, *args, **kwargs)</code>.</div></div>
+            <div class="ti"><div class="tin">Lambda — funções anônimas</div><div class="tid"><code>dobrar = lambda x: x * 2</code>. Útil como argumento de funções de alta ordem: <code>sorted(lista, key=lambda x: x["nome"])</code>. Para ordenar lista de dicts pelo campo "nome". Lambdas são de expressão única — para lógica complexa, use <code>def</code>.</div></div>
+            <div class="ti"><div class="tin">Decoradores</div><div class="tid">Funções que modificam outras funções. Sintaxe: <code>@meu_decorator</code> antes de <code>def</code>. Muito usado em Flask (<code>@app.route</code>) e Django. Por baixo: <code>f = meu_decorator(f)</code>. Útil para logging, autenticação, cache, medição de tempo de execução.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tia">📦</div><h4>Módulos e Bibliotecas Essenciais</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">sys — sistema e argumentos</div><div class="tid"><code>sys.argv</code>: argumentos de linha de comando (como argc/argv do C). <code>sys.exit(1)</code>: encerra o programa com código. <code>sys.stdin</code>, <code>sys.stdout</code>: streams padrão. <code>sys.path</code>: lista de diretórios onde Python procura módulos.</div></div>
+            <div class="ti"><div class="tin">os — sistema operacional</div><div class="tid"><code>os.path.exists("arquivo.txt")</code>: verifica existência. <code>os.listdir(".")</code>: lista arquivos. <code>os.makedirs("pasta/sub")</code>: cria diretórios. <code>os.environ["HOME"]</code>: variáveis de ambiente. Permite escrever código portável entre Windows/Mac/Linux.</div></div>
+            <div class="ti"><div class="tin">re — expressões regulares</div><div class="tid"><code>re.search(r'\d+', texto)</code>: encontra número. <code>re.findall(r'\b\w+\b', texto)</code>: todas as palavras. <code>re.sub(r'[aeiou]', '*', texto)</code>: substitui vogais. Expressões regulares são uma mini-linguagem para descrever padrões em texto — essencial para validação e parsing.</div></div>
+            <div class="ti"><div class="tin">pip — gerenciador de pacotes</div><div class="tid"><code>pip install requests</code> instala o pacote requests do PyPI (Python Package Index). <code>pip install -r requirements.txt</code> instala todos os pacotes listados. <code>pip freeze</code> lista os instalados. Use ambientes virtuais (<code>python -m venv venv</code>) para isolar dependências por projeto.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex"><h4>Exercícios Práticos — Problem Set 6</h4>
+      <div class="exl">
+        <div class="ei"><div class="en">01</div><div class="et"><strong>Reescritas em Python:</strong> Reimplemente Hello, Mario, Cash, Credit e Readability em Python. Compare as linhas de código necessárias em cada linguagem.</div></div>
+        <div class="ei"><div class="en">02</div><div class="et"><strong>World Cup:</strong> Simule a Copa do Mundo. Use CSV com ratings de times, calcule probabilidade de cada time ganhar cada partida com a fórmula fornecida e simule N torneios para estimar a probabilidade de cada time campeão.</div></div>
+        <div class="ei"><div class="en">03</div><div class="et"><strong>DNA:</strong> Leia um banco de dados CSV com contagens de STRs por pessoa e uma sequência de DNA. Conte a maior sequência repetida consecutiva de cada STR e identifique a pessoa correspondente.</div></div>
+        <div class="ei"><div class="en">04</div><div class="et"><strong>Exploração:</strong> Use o módulo <em>matplotlib</em> para plotar um gráfico de barras das notas de uma turma. Use <em>requests</em> para fazer uma chamada a uma API pública e exibir os dados.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SEMANA 7 ═══════════════ -->
+<div class="wc" id="s7">
+  <div class="wh" onclick="tog(this)">
+    <div class="wn">Semana 7</div>
+    <div class="wi"><h3>SQL e Bancos de Dados</h3><p>CRUD, relacionamentos, JOINs, índices e segurança</p></div>
+    <div class="wm"><span class="badge bsq">SQL</span><span class="wa">▶</span></div>
+  </div>
+  <div class="wb">
+    <div class="ibox">SQL (Structured Query Language) existe desde 1974 e é a linguagem mais usada para gerenciar dados no mundo. Do Instagram ao sistema bancário, da Netflix ao seu prontuário médico, SQL está por baixo de praticamente tudo. Não é "apenas uma ferramenta" — é uma competência fundamental para qualquer engenheiro de software.</div>
+
+    <div class="tblock">
+      <div class="tsec">Fundamentos SQL — CRUD</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tir">DB</div><h4>Criar e Manipular Dados</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">CREATE TABLE — definir estrutura</div><div class="tid"><code>CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, hash TEXT NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)</code>. Tipos SQLite: INTEGER, TEXT, REAL, BLOB, NULL. Constraints: NOT NULL, UNIQUE, PRIMARY KEY, DEFAULT, CHECK, FOREIGN KEY.</div></div>
+            <div class="ti"><div class="tin">INSERT INTO — adicionar dados</div><div class="tid"><code>INSERT INTO users (username, hash) VALUES ('alice', 'abc123hash')</code>. Sem id — AUTOINCREMENT preenche automaticamente. Para múltiplos registros: <code>INSERT INTO tabela (col) VALUES (?), (?), (?)</code>. Em Python com sqlite3, use parâmetros <code>?</code> sempre — nunca concatene strings diretamente.</div></div>
+            <div class="ti"><div class="tin">UPDATE — modificar registros</div><div class="tid"><code>UPDATE users SET username = 'alice2' WHERE id = 1</code>. SEM o WHERE, atualiza TODOS os registros — erro devastador em produção! Sempre verifique o WHERE antes de executar um UPDATE. A cláusula <code>RETURNING *</code> (PostgreSQL/SQLite 3.35+) retorna as linhas modificadas.</div></div>
+            <div class="ti"><div class="tin">DELETE — remover registros</div><div class="tid"><code>DELETE FROM users WHERE id = 1</code>. Novamente: sem WHERE, deleta tudo. Para deletar tabela inteira de forma eficiente: <code>DELETE FROM tabela</code> (mantém estrutura) ou <code>DROP TABLE tabela</code> (remove tudo). Em produção, prefira "soft delete": coluna <code>deleted_at</code> em vez de deletar fisicamente.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tib">?</div><h4>SELECT — Consultas</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">SELECT básico e WHERE</div><div class="tid"><code>SELECT nome, idade FROM pessoas WHERE cidade = 'SP' AND idade > 18 ORDER BY nome LIMIT 10</code>. Operadores: <code>=, !=, &lt;, &gt;, &lt;=, &gt;=, BETWEEN, IN, LIKE, IS NULL</code>. LIKE: <code>'%Jo%'</code> contém "Jo", <code>'Jo%'</code> começa com "Jo". Case-insensitive por padrão no SQLite.</div></div>
+            <div class="ti"><div class="tin">Funções de agregação</div><div class="tid"><code>COUNT(*)</code>: total de linhas. <code>SUM(col)</code>: soma. <code>AVG(col)</code>: média. <code>MAX/MIN(col)</code>: extremos. Usadas com GROUP BY: <code>SELECT cidade, COUNT(*) as qtd FROM pessoas GROUP BY cidade HAVING qtd > 100</code>. HAVING filtra grupos (WHERE filtra linhas).</div></div>
+            <div class="ti"><div class="tin">Subqueries</div><div class="tid"><code>SELECT * FROM filmes WHERE id IN (SELECT movie_id FROM stars WHERE person_id = (SELECT id FROM people WHERE name = 'Tom Hanks'))</code>. Subqueries podem aparecer em WHERE, FROM, SELECT e HAVING. São avaliadas de dentro para fora. CTEs (<code>WITH ... AS</code>) tornam subqueries complexas mais legíveis.</div></div>
+            <div class="ti"><div class="tin">ORDER BY e LIMIT/OFFSET</div><div class="tid"><code>ORDER BY nota DESC, nome ASC</code> — ordena por nota decrescente, depois por nome crescente como desempate. <code>LIMIT 10 OFFSET 20</code> — pula os 20 primeiros e retorna os próximos 10. Base de paginação: página 3 com 10 por página = LIMIT 10 OFFSET 20.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cb">
+      <div class="cbh"><span class="cbl">SQL + Python</span><span class="cbt">movies.py — consultas com sqlite3</span></div>
+      <pre><code><span class="kw">import</span> sqlite3
+
+conn = sqlite3.<span class="fn">connect</span>(<span class="str">"movies.db"</span>)
+db = conn.<span class="fn">cursor</span>()
+
+<span class="cm"># JOINs em cascata — filmes de Christopher Nolan</span>
+db.<span class="fn">execute</span>(<span class="str">"""
+    SELECT m.title, m.year, AVG(r.rating) as media
+    FROM movies m
+    JOIN directors d ON d.movie_id = m.id
+    JOIN people p ON p.id = d.person_id
+    JOIN ratings r ON r.movie_id = m.id
+    WHERE p.name = ?
+    GROUP BY m.id
+    ORDER BY m.year DESC
+"""</span>, (<span class="str">"Christopher Nolan"</span>,))
+
+<span class="kw">for</span> titulo, ano, rating <span class="kw">in</span> db.<span class="fn">fetchall</span>():
+    <span class="fn">print</span>(<span class="str">f"{ano} | {titulo:40} | {rating:.1f}"</span>)
+
+<span class="cm"># SQL injection — NUNCA faça assim:</span>
+<span class="cm"># query = "SELECT * FROM users WHERE user='" + user_input + "'"</span>
+<span class="cm"># Se user_input = "alice' OR '1'='1" → retorna TODOS os usuários!</span>
+
+<span class="cm"># SEMPRE use parâmetros preparados:</span>
+db.<span class="fn">execute</span>(<span class="str">"SELECT * FROM users WHERE username = ?"</span>, (user_input,))
+
+conn.<span class="fn">close</span>()</code></pre>
+    </div>
+
+    <div class="tblock">
+      <div class="tsec">Relacionamentos, Índices e Segurança</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tig">🔗</div><h4>Relacionamentos e JOINs</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Tipos de relacionamento</div><div class="tid"><strong>1:1</strong>: uma pessoa tem um passaporte. <strong>1:N</strong>: um autor tem muitos livros (FK no livro). <strong>N:N</strong>: um estudante tem muitas disciplinas e vice-versa — requer tabela intermediária: <code>enrollments(student_id, course_id)</code>.</div></div>
+            <div class="ti"><div class="tin">INNER JOIN vs LEFT JOIN</div><div class="tid"><code>INNER JOIN</code>: retorna apenas registros com correspondência em ambas as tabelas. <code>LEFT JOIN</code>: todos da tabela esquerda + correspondências da direita (NULL se não houver). Use LEFT JOIN quando quiser "todos os usuários, mesmo sem pedidos". INNER JOIN quando ambos devem existir.</div></div>
+            <div class="ti"><div class="tin">Normalização</div><div class="tid">Primeira Forma Normal (1NF): sem grupos repetidos, cada coluna tem um valor. Segunda (2NF): eliminar dependências parciais. Terceira (3NF): eliminar dependências transitivas. Na prática: não repita dados — se você armazena "cidade" em múltiplas tabelas, crie uma tabela de cidades e use FK.</div></div>
+            <div class="ti"><div class="tin">Índices — acelerar buscas</div><div class="tid"><code>CREATE INDEX idx_user ON users(username)</code>. Um índice é uma estrutura auxiliar (B-tree) que torna buscas por essa coluna O(log n) em vez de O(n). Custo: espaço extra + updates mais lentos. Crie índices em colunas usadas frequentemente em WHERE, JOIN, ORDER BY. PKs já têm índice automático.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tia">🔒</div><h4>Segurança e Transações</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">SQL Injection — o ataque mais comum</div><div class="tid">Se você construir uma query concatenando strings: <code>"SELECT * FROM users WHERE user='" + input + "'"</code>, um atacante pode digitar <code>alice'; DROP TABLE users; --</code> e destruir o banco. Solução: sempre use prepared statements com <code>?</code> — o driver trata o input como dado, não como código SQL.</div></div>
+            <div class="ti"><div class="tin">Transactions — ACID</div><div class="tid"><strong>A</strong>tomicidade: tudo ou nada. <strong>C</strong>onsistência: banco sempre em estado válido. <strong>I</strong>solamento: transações paralelas não interferem. <strong>D</strong>urabilidade: após commit, é permanente. Em Python: <code>conn.execute("BEGIN")</code>, operações, <code>conn.commit()</code> ou <code>conn.rollback()</code> em caso de erro.</div></div>
+            <div class="ti"><div class="tin">Race conditions</div><div class="tid">Dois usuários compram o último ingresso simultaneamente. Ambos verificam: "há 1 disponível?". Ambos obtêm "sim". Ambos debitam. Resultado: -1 ingressos. Solução: <code>SELECT ... FOR UPDATE</code> (trava a linha), ou transaction com verificação: <code>UPDATE tickets SET qty=qty-1 WHERE id=? AND qty>0</code>.</div></div>
+            <div class="ti"><div class="tin">ORM vs SQL puro</div><div class="tid">ORMs (SQLAlchemy, Django ORM) mapeiam objetos Python para tabelas SQL automaticamente. Vantagens: menos código, portabilidade entre bancos, proteção automática contra injection. Desvantagens: menos controle, queries geradas podem ser ineficientes. Para o CS50, aprenda SQL puro primeiro — ORMs fazem mais sentido depois.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex"><h4>Exercícios Práticos — Problem Set 7</h4>
+      <div class="exl">
+        <div class="ei"><div class="en">01</div><div class="et"><strong>Movies:</strong> Escreva 13 queries SQL sobre o banco de dados de filmes IMDb (pessoas, filmes, estrelas, diretores, ratings). Inclui JOINs, subqueries, GROUP BY e funções de agregação.</div></div>
+        <div class="ei"><div class="en">02</div><div class="et"><strong>Fiftyville:</strong> Resolva um mistério policial analisando o banco de dados de uma cidade fictícia. Use registros de câmeras, ligações telefônicas, contas bancárias e voos para identificar o culpado, o cúmplice e o destino de fuga.</div></div>
+        <div class="ei"><div class="en">03</div><div class="et"><strong>Schema design:</strong> Projete o esquema de banco de dados para uma rede social simples. Deve suportar: usuários, posts, comentários, likes e follows. Defina PKs, FKs e justifique as escolhas de normalização.</div></div>
+        <div class="ei"><div class="en">04</div><div class="et"><strong>Performance:</strong> Execute uma query lenta em uma tabela com 1 milhão de registros. Adicione um índice e meça a diferença de tempo com <em>EXPLAIN QUERY PLAN</em> antes e depois.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SEMANA 8 ═══════════════ -->
+<div class="wc" id="s8">
+  <div class="wh" onclick="tog(this)">
+    <div class="wn">Semana 8</div>
+    <div class="wi"><h3>Desenvolvimento Web</h3><p>HTML semântico, CSS moderno, JavaScript e o DOM</p></div>
+    <div class="wm"><span class="badge bw">HTML/CSS/JS</span><span class="wa">▶</span></div>
+  </div>
+  <div class="wb">
+    <div class="ibox">A web é a plataforma mais acessível da história. Com HTML, CSS e JavaScript, você publica algo que qualquer pessoa no mundo pode acessar de qualquer dispositivo, sem instalar nada. HTML estrutura o conteúdo, CSS o estiliza, e JavaScript o torna interativo. Juntos, formam a base de tudo que você vê no navegador.</div>
+
+    <div class="tblock">
+      <div class="tsec">HTML — Estrutura e Semântica</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tir">〈〉</div><h4>Tags Essenciais e Semântica</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Tags estruturais semânticas</div><div class="tid"><code>&lt;header&gt;</code>: cabeçalho da página/seção. <code>&lt;nav&gt;</code>: navegação. <code>&lt;main&gt;</code>: conteúdo principal (único por página). <code>&lt;article&gt;</code>: conteúdo independente. <code>&lt;section&gt;</code>: seção temática. <code>&lt;aside&gt;</code>: conteúdo lateral. <code>&lt;footer&gt;</code>: rodapé. Semântica melhora SEO e acessibilidade.</div></div>
+            <div class="ti"><div class="tin">Formulários — capturar dados</div><div class="tid"><code>&lt;form action="/submit" method="post"&gt;</code> envolve os campos. <code>&lt;input type="text" name="usuario" required&gt;</code>. Tipos de input: text, password, email, number, checkbox, radio, file, submit. <code>&lt;label for="id"&gt;</code> associa texto ao campo para acessibilidade.</div></div>
+            <div class="ti"><div class="tin">Acessibilidade — WCAG</div><div class="tid">Imagens: <code>alt="Descrição da imagem"</code> para leitores de tela. Botões: <code>aria-label="Fechar modal"</code> quando o texto não está visível. Links: texto descritivo ("Leia o artigo" não "Clique aqui"). Contraste: razão mínima 4.5:1 para texto. <code>tabindex</code> para navegação por teclado.</div></div>
+            <div class="ti"><div class="tin">Atributos importantes</div><div class="tid"><code>id</code>: único na página, usado por CSS e JS. <code>class</code>: pode repetir, grupos de elementos. <code>data-*</code>: dados customizados (<code>data-user-id="42"</code>). <code>href</code>: destino de links. <code>src</code>: fonte de imagem/script. <code>disabled</code>, <code>readonly</code>, <code>placeholder</code>: comportamento de formulários.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tib">CSS</div><h4>CSS — Layout e Estilo</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Box model — a base de tudo</div><div class="tid">Todo elemento HTML é uma caixa: <strong>content</strong> (o dado), <strong>padding</strong> (espaço interno), <strong>border</strong> (borda), <strong>margin</strong> (espaço externo). Com <code>box-sizing: border-box</code>, padding e border são incluídos na largura — muito mais intuitivo. Adicione isso a todos seus projetos.</div></div>
+            <div class="ti"><div class="tin">Flexbox — layout unidimensional</div><div class="tid"><code>display: flex</code> no container. Direção: <code>flex-direction: row/column</code>. Alinhamento do eixo principal: <code>justify-content: center/space-between/flex-start</code>. Eixo cruzado: <code>align-items: center/stretch</code>. Crescer/encolher: <code>flex: 1</code>. Perfeito para navbars, cards em linha, centralizar elementos.</div></div>
+            <div class="ti"><div class="tin">CSS Grid — layout bidimensional</div><div class="tid"><code>display: grid; grid-template-columns: 1fr 2fr 1fr</code> cria 3 colunas. <code>grid-gap: 16px</code> define espaçamento. <code>grid-column: 1 / 3</code> faz o elemento ocupar da coluna 1 à 3. <code>repeat(auto-fit, minmax(200px, 1fr))</code> cria grid responsivo automaticamente — colunas se adaptam ao espaço.</div></div>
+            <div class="ti"><div class="tin">Responsividade — media queries</div><div class="tid"><code>@media (max-width: 768px) { .nav { flex-direction: column; } }</code> aplica estilos apenas em telas pequenas. Abordagem mobile-first: escreva estilos para mobile primeiro, adicione media queries para telas maiores. Breakpoints comuns: 480px (mobile), 768px (tablet), 1024px (desktop).</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cb">
+      <div class="cbh"><span class="cbl">JavaScript</span><span class="cbt">dom_e_eventos.js — interatividade</span></div>
+      <pre><code><span class="cm">// Selecionar elementos do DOM</span>
+<span class="kw">const</span> btn = document.<span class="fn">querySelector</span>(<span class="str">'#meu-botao'</span>);
+<span class="kw">const</span> lista = document.<span class="fn">querySelectorAll</span>(<span class="str">'.item'</span>); <span class="cm">// NodeList</span>
+<span class="kw">const</span> titulo = document.<span class="fn">getElementById</span>(<span class="str">'titulo'</span>);
+
+<span class="cm">// Modificar conteúdo e estilos</span>
+titulo.textContent = <span class="str">"Novo Título"</span>;        <span class="cm">// texto puro (seguro)</span>
+titulo.innerHTML = <span class="str">"&lt;em&gt;Itálico&lt;/em&gt;"</span>;   <span class="cm">// HTML (cuidado com XSS!)</span>
+titulo.style.color = <span class="str">"red"</span>;
+titulo.classList.<span class="fn">toggle</span>(<span class="str">"ativo"</span>);          <span class="cm">// adiciona/remove classe</span>
+
+<span class="cm">// Eventos — o coração da interatividade</span>
+btn.<span class="fn">addEventListener</span>(<span class="str">"click"</span>, <span class="kw">function</span>(event) {
+    event.<span class="fn">preventDefault</span>();  <span class="cm">// impede comportamento padrão</span>
+    <span class="fn">alert</span>(<span class="str">"Clicado!"</span>);
+});
+
+<span class="cm">// Fetch API — buscar dados sem recarregar a página</span>
+<span class="kw">async function</span> <span class="fn">buscarUsuario</span>(id) {
+    <span class="kw">try</span> {
+        <span class="kw">const</span> resposta = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">`/api/users/${id}`</span>);
+        <span class="kw">if</span> (!resposta.ok) <span class="kw">throw new</span> <span class="tp">Error</span>(<span class="str">"Erro na API"</span>);
+
+        <span class="kw">const</span> dados = <span class="kw">await</span> resposta.<span class="fn">json</span>();
+        document.<span class="fn">querySelector</span>(<span class="str">'#nome'</span>).textContent = dados.nome;
+    } <span class="kw">catch</span> (err) {
+        <span class="fn">console</span>.<span class="fn">error</span>(<span class="str">"Falhou:"</span>, err.message);
+    }
+}
+
+<span class="cm">// Manipulação de listas dinamicamente</span>
+<span class="kw">const</span> ul = document.<span class="fn">querySelector</span>(<span class="str">'#lista'</span>);
+[<span class="str">"Alice"</span>, <span class="str">"Bob"</span>, <span class="str">"Carlos"</span>].<span class="fn">forEach</span>(nome => {
+    <span class="kw">const</span> li = document.<span class="fn">createElement</span>(<span class="str">"li"</span>);
+    li.textContent = nome;
+    ul.<span class="fn">appendChild</span>(li);
+});</code></pre>
+    </div>
+
+    <div class="tblock">
+      <div class="tsec">JavaScript Moderno</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tig">JS</div><h4>Recursos ES6+</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">let e const vs var</div><div class="tid">Nunca use <code>var</code>. <code>let</code> é block-scoped (como variáveis em C) e pode ser reatribuído. <code>const</code> é block-scoped e não pode ser reatribuído — mas objetos e arrays apontados por const ainda podem ser modificados. Regra: sempre tente <code>const</code> primeiro, use <code>let</code> quando precisar reatribuir.</div></div>
+            <div class="ti"><div class="tin">Arrow functions</div><div class="tid"><code>const dobrar = x => x * 2</code>. Com múltiplos parâmetros: <code>(a, b) => a + b</code>. Com corpo: <code>(x) => { const y = x+1; return y*2; }</code>. Diferença importante: arrow functions não têm seu próprio <code>this</code> — capturam o <code>this</code> do escopo externo. Crucial para callbacks em classes.</div></div>
+            <div class="ti"><div class="tin">Desestruturação</div><div class="tid">Array: <code>const [a, b, ...resto] = [1, 2, 3, 4, 5]</code>. Objeto: <code>const {nome, idade: anos} = pessoa</code> — renomeia idade para anos. Em parâmetros: <code>function f({nome, idade}) {}</code> — aceita objeto e acessa diretamente os campos. Muito usado com dados de APIs JSON.</div></div>
+            <div class="ti"><div class="tin">Promises e async/await</div><div class="tid">Promises representam valores futuros. <code>async function f()</code> retorna uma Promise. <code>await</code> pausa até a Promise resolver. <code>try/catch</code> captura erros assíncronos. Sem async/await, callbacks aninhados criam o "callback hell" — código profundamente indentado e difícil de manter.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tia">⚡</div><h4>Arrays e Programação Funcional</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">map — transformar cada elemento</div><div class="tid"><code>const quadrados = numeros.map(x => x * x)</code> cria novo array transformado. Não modifica o original. Equivalente ao <code>for</code> loop mas expressivo e imutável. Pode ser encadeado: <code>arr.map(f).filter(g).reduce(h)</code>. Funciona com qualquer tipo de transformação.</div></div>
+            <div class="ti"><div class="tin">filter — selecionar elementos</div><div class="tid"><code>const pares = numeros.filter(x => x % 2 === 0)</code> retorna novo array com elementos que passaram no teste. <code>filter(Boolean)</code> remove valores falsy (null, undefined, 0, ""). Frequentemente usado junto com map para pipeline de transformação de dados.</div></div>
+            <div class="ti"><div class="tin">reduce — agregar em um valor</div><div class="tid"><code>const soma = arr.reduce((acc, x) => acc + x, 0)</code>. O acumulador começa em 0, e para cada elemento, a função acumula o resultado. Pode implementar qualquer operação de agregação: soma, produto, máximo, agrupamento por chave, construção de objeto a partir de array.</div></div>
+            <div class="ti"><div class="tin">localStorage — persistência no browser</div><div class="tid"><code>localStorage.setItem("chave", JSON.stringify(dados))</code> persiste mesmo após fechar o browser. <code>JSON.parse(localStorage.getItem("chave"))</code> recupera. Limite ~5MB. Alternativas: sessionStorage (apenas a sessão atual), IndexedDB (dados maiores e estruturados), cookies (enviados ao servidor a cada request).</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex"><h4>Exercícios Práticos — Problem Set 8</h4>
+      <div class="exl">
+        <div class="ei"><div class="en">01</div><div class="et"><strong>Homepage:</strong> Crie um site pessoal com pelo menos 4 páginas. Use HTML semântico correto, CSS para estilo consistente (pode usar Bootstrap), e pelo menos um elemento JavaScript interativo.</div></div>
+        <div class="ei"><div class="en">02</div><div class="et"><strong>Trivia:</strong> Implemente um quiz de trivia com perguntas de múltipla escolha e verdadeiro/falso. Use JavaScript para validar respostas, mostrar feedback colorido (verde/vermelho) sem recarregar a página.</div></div>
+        <div class="ei"><div class="en">03</div><div class="et"><strong>API integration:</strong> Use <em>fetch()</em> para consumir uma API pública (Open Trivia DB, REST Countries, OpenWeather) e renderize os dados dinamicamente no DOM com template literals.</div></div>
+        <div class="ei"><div class="en">04</div><div class="et"><strong>To-do app:</strong> Implemente uma lista de tarefas completa com adicionar, marcar como feita, deletar e filtrar. Persista os dados no <em>localStorage</em> para sobreviver ao refresh da página.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SEMANA 9 ═══════════════ -->
+<div class="wc" id="s9">
+  <div class="wh" onclick="tog(this)">
+    <div class="wn">Semana 9</div>
+    <div class="wi"><h3>Flask</h3><p>Back-end Python, rotas, templates Jinja2, sessões e APIs</p></div>
+    <div class="wm"><span class="badge bf">Flask</span><span class="wa">▶</span></div>
+  </div>
+  <div class="wb">
+    <div class="ibox">Flask une tudo que aprendemos: Python para lógica de negócio, SQL para persistência, HTML/CSS/JS para interface. É um micro-framework web minimalista — você começa com 5 linhas de Python e tem uma aplicação web funcionando. Esta semana é onde tudo converge: construiremos aplicações web completas com autenticação, banco de dados e APIs.</div>
+
+    <div class="tblock">
+      <div class="tsec">Flask Fundamentos</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tir">🌐</div><h4>Rotas e HTTP</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">O que é HTTP</div><div class="tid">HTTP (HyperText Transfer Protocol) é o protocolo de comunicação da web. Cliente (browser) envia Request, servidor envia Response. Request: método + URL + headers + body. Response: status code + headers + body. Métodos: GET (buscar), POST (criar), PUT (atualizar), DELETE (deletar).</div></div>
+            <div class="ti"><div class="tin">Rotas com @app.route</div><div class="tid"><code>@app.route("/perfil/&lt;int:user_id&gt;")</code> define uma rota com parâmetro. <code>methods=["GET", "POST"]</code> define quais métodos aceita. Se não especificado, só aceita GET. Use GET para leitura (dados na URL), POST para envio (dados no body, mais seguro para senhas).</div></div>
+            <div class="ti"><div class="tin">Status codes HTTP</div><div class="tid">200 OK, 201 Created, 301 Moved Permanently, 302 Found (redirect), 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 500 Internal Server Error. <code>return render_template("erro.html"), 400</code> — Flask usa o segundo argumento como status code.</div></div>
+            <div class="ti"><div class="tin">request — dados do cliente</div><div class="tid"><code>request.method</code>: GET ou POST. <code>request.form["campo"]</code>: dados de formulário HTML. <code>request.args.get("q")</code>: parâmetros de URL (?q=valor). <code>request.json</code>: corpo JSON (APIs). <code>request.files["foto"]</code>: arquivos enviados. <code>request.cookies</code>: cookies enviados pelo browser.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tib">{ }</div><h4>Templates Jinja2</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">render_template — passar dados</div><div class="tid"><code>return render_template("index.html", nome="Alice", lista=[1,2,3])</code> renderiza o template com as variáveis. No HTML: <code>{{ nome }}</code> exibe o valor. Jinja2 faz auto-escape de HTML por padrão — protege contra XSS. Para HTML literal: <code>{{ texto | safe }}</code> (use com cuidado).</div></div>
+            <div class="ti"><div class="tin">Herança de templates</div><div class="tid"><code>layout.html</code> define a estrutura base com <code>{% block content %}{% endblock %}</code>. Páginas filhas: <code>{% extends "layout.html" %}</code> + <code>{% block content %} ... {% endblock %}</code>. Isso garante consistência (navbar, footer) sem repetir HTML em cada página. DRY aplicado a templates.</div></div>
+            <div class="ti"><div class="tin">Condicionais e loops em templates</div><div class="tid"><code>{% if user.is_logged_in %} Bem-vindo! {% else %} Faça login {% endif %}</code>. <code>{% for produto in produtos %} &lt;li&gt;{{ produto.nome }}&lt;/li&gt; {% endfor %}</code>. <code>{% if loop.last %}</code> detecta última iteração. <code>{{ loop.index }}</code> dá o índice atual.</div></div>
+            <div class="ti"><div class="tin">Filtros Jinja2</div><div class="tid"><code>{{ texto | upper }}</code>, <code>{{ lista | length }}</code>, <code>{{ preco | round(2) }}</code>, <code>{{ data | strftime('%d/%m/%Y') }}</code>. Você pode criar filtros customizados: <code>@app.template_filter('brl')</code> para formatar como R$. Filtros tornam templates mais expressivos.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cb">
+      <div class="cbh"><span class="cbl">Python / Flask</span><span class="cbt">app.py — autenticação completa</span></div>
+      <pre><code><span class="kw">from</span> flask <span class="kw">import</span> Flask, session, redirect, render_template, request
+<span class="kw">from</span> werkzeug.security <span class="kw">import</span> generate_password_hash, check_password_hash
+<span class="kw">from</span> functools <span class="kw">import</span> wraps
+
+app = <span class="fn">Flask</span>(__name__)
+app.secret_key = <span class="str">"chave-super-secreta-use-env-em-producao"</span>
+
+<span class="cm">// Decorator para proteger rotas</span>
+<span class="kw">def</span> <span class="fn">login_required</span>(f):
+    @<span class="fn">wraps</span>(f)
+    <span class="kw">def</span> <span class="fn">wrapper</span>(*args, **kwargs):
+        <span class="kw">if</span> session.<span class="fn">get</span>(<span class="str">"user_id"</span>) <span class="kw">is None</span>:
+            <span class="kw">return</span> <span class="fn">redirect</span>(<span class="str">"/login"</span>)
+        <span class="kw">return</span> <span class="fn">f</span>(*args, **kwargs)
+    <span class="kw">return</span> wrapper
+
+<span class="tp">@app.route</span>(<span class="str">"/login"</span>, methods=[<span class="str">"GET"</span>, <span class="str">"POST"</span>])
+<span class="kw">def</span> <span class="fn">login</span>():
+    <span class="kw">if</span> request.method == <span class="str">"POST"</span>:
+        usuario = db.<span class="fn">execute</span>(
+            <span class="str">"SELECT * FROM users WHERE username = ?"</span>,
+            request.form[<span class="str">"username"</span>]
+        )
+        <span class="cm"># Verifica se usuário existe E senha é correta</span>
+        <span class="kw">if</span> <span class="fn">len</span>(usuario) == <span class="num">1</span> <span class="kw">and</span> <span class="fn">check_password_hash</span>(
+            usuario[<span class="num">0</span>][<span class="str">"hash"</span>], request.form[<span class="str">"password"</span>]
+        ):
+            session[<span class="str">"user_id"</span>] = usuario[<span class="num">0</span>][<span class="str">"id"</span>]
+            <span class="kw">return</span> <span class="fn">redirect</span>(<span class="str">"/"</span>)
+        <span class="kw">return</span> <span class="fn">render_template</span>(<span class="str">"login.html"</span>, erro=<span class="str">"Credenciais inválidas"</span>)
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="str">"login.html"</span>)
+
+<span class="tp">@app.route</span>(<span class="str">"/"</span>)
+@<span class="fn">login_required</span>   <span class="cm"># protege essa rota</span>
+<span class="kw">def</span> <span class="fn">index</span>():
+    user_id = session[<span class="str">"user_id"</span>]
+    dados = db.<span class="fn">execute</span>(<span class="str">"SELECT * FROM portfolio WHERE user_id = ?"</span>, user_id)
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="str">"index.html"</span>, portfolio=dados)</code></pre>
+    </div>
+
+    <div class="tblock">
+      <div class="tsec">Sessões, Segurança e APIs REST</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tig">🔐</div><h4>Sessões e Autenticação</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">session — estado por usuário</div><div class="tid">HTTP é stateless — cada request é independente. Sessions resolvem isso: o servidor cria um ID de sessão, o browser o armazena em um cookie. A cada request, o cookie é enviado, e o servidor identifica quem está pedindo. <code>session["user_id"] = id</code> no login, <code>session.clear()</code> no logout.</div></div>
+            <div class="ti"><div class="tin">Hash de senhas — nunca guarde em texto puro</div><div class="tid">Banco de dados são vazados. Se as senhas estiverem em texto puro, todos os usuários estão comprometidos. Use <code>generate_password_hash("senha")</code> para armazenar um hash bcrypt. <code>check_password_hash(hash, "tentativa")</code> para verificar. Bcrypt é lento por design — dificulta ataques de força bruta.</div></div>
+            <div class="ti"><div class="tin">flash messages</div><div class="tid"><code>flash("Compra realizada com sucesso!", "success")</code> armazena uma mensagem que aparece na próxima página. No template: <code>{% for msg in get_flashed_messages() %}</code>. Categorias: "success", "danger", "warning". Desaparecem após serem exibidas — ideal para feedback de ações (registro, compra, erro).</div></div>
+            <div class="ti"><div class="tin">Variáveis de ambiente</div><div class="tid">Nunca hardcode API keys, senhas de banco ou secret keys no código — elas apareceriam no Git. Use variáveis de ambiente: <code>os.environ.get("API_KEY")</code>. Em desenvolvimento: arquivo <code>.env</code> + python-dotenv. Em produção: variáveis no servidor. Adicione .env ao .gitignore!</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tia">📡</div><h4>APIs REST com Flask</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Construir uma API em Flask</div><div class="tid"><code>return jsonify({"status": "ok", "dados": lista})</code> retorna JSON. Para APIs, use <code>request.json</code> para receber dados. Estrutura REST: <code>GET /api/users</code> (listar), <code>POST /api/users</code> (criar), <code>GET /api/users/&lt;id&gt;</code> (buscar), <code>PUT /api/users/&lt;id&gt;</code> (atualizar), <code>DELETE /api/users/&lt;id&gt;</code> (deletar).</div></div>
+            <div class="ti"><div class="tin">AJAX — atualizar sem recarregar</div><div class="tid">Combinando Flask (backend) com fetch() (frontend): o browser envia um request para <code>/api/search?q=termo</code>, Flask processa a query no banco, retorna JSON, e JavaScript atualiza o DOM — tudo sem recarregar a página. Isso é a base de como Gmail, Google Maps e redes sociais funcionam.</div></div>
+            <div class="ti"><div class="tin">Consumir APIs externas</div><div class="tid">Instale <code>requests</code>: <code>import requests; r = requests.get("https://api.exemplo.com/dados", headers={"Authorization": f"Bearer {API_KEY}"}); dados = r.json()</code>. Sempre trate erros: <code>r.raise_for_status()</code> lança exceção em status 4xx/5xx. Rate limits: respeite os limites da API com delays entre chamadas.</div></div>
+            <div class="ti"><div class="tin">CORS — Cross-Origin Resource Sharing</div><div class="tid">Por segurança, browsers bloqueiam requests JavaScript para domínios diferentes do da página. Para APIs públicas: instale <code>flask-cors</code>: <code>CORS(app)</code> permite todos os origens. Para produção: restrinja a origens específicas. Não afeta requests do servidor (Python requests) — só requests do browser.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex"><h4>Exercícios Práticos — Problem Set 9</h4>
+      <div class="exl">
+        <div class="ei"><div class="en">01</div><div class="et"><strong>Finance (C$50):</strong> Implemente uma aplicação de carteira de ações virtual completa. Registro de usuários, login/logout com sessões, compra e venda de ações com dados reais da API IEX Cloud, histórico de transações e saldo em dinheiro.</div></div>
+        <div class="ei"><div class="en">02</div><div class="et"><strong>API própria:</strong> Crie uma API REST para um recurso de sua escolha (tarefas, produtos, posts). Implemente os 5 endpoints CRUD com autenticação por token. Teste com curl ou Postman.</div></div>
+        <div class="ei"><div class="en">03</div><div class="et"><strong>Feature bônus Finance:</strong> Adicione: recarga de saldo via formulário, alerta de preço (notificação quando ação atingir valor), ou gráfico do histórico de valor do portfólio usando Chart.js.</div></div>
+        <div class="ei"><div class="en">04</div><div class="et"><strong>Deploy:</strong> Faça deploy da sua aplicação Flask gratuitamente no <em>Railway</em>, <em>Render</em> ou <em>PythonAnywhere</em>. Configure variáveis de ambiente no painel do servidor, sem expor secrets no código.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SEMANA 10 ═══════════════ -->
+<div class="wc" id="s10">
+  <div class="wh" onclick="tog(this)">
+    <div class="wn">Semana 10</div>
+    <div class="wi"><h3>Inteligência Artificial</h3><p>Machine Learning, redes neurais, LLMs e ética em IA</p></div>
+    <div class="wm"><span class="badge bai">AI</span><span class="wa">▶</span></div>
+  </div>
+  <div class="wb">
+    <div class="ibox">A última semana olha para o futuro — que já é o presente. IA não é magia ou ficção científica: é matemática, probabilidade, álgebra linear e enormes quantidades de dados. Esta semana desmistifica os fundamentos dos sistemas de IA modernos — desde um classificador simples até os Large Language Models que transformaram a tecnologia nos últimos anos. E discutiremos as implicações éticas sérias que acompanham esse poder.</div>
+
+    <div class="tblock">
+      <div class="tsec">Machine Learning — Fundamentos</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tir">🧠</div><h4>Tipos de Aprendizado</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Supervised Learning — aprender de exemplos</div><div class="tid">Você fornece pares (input, output esperado): 10.000 e-mails rotulados como "spam" ou "não-spam". O modelo aprende a relação entre as features do e-mail (palavras, remetente, horário) e o rótulo. Depois classifica novos e-mails nunca vistos. Exemplos: classificação de imagens, previsão de preços, detecção de fraude.</div></div>
+            <div class="ti"><div class="tin">Unsupervised Learning — encontrar estrutura</div><div class="tid">Sem rótulos. O modelo descobre padrões nos dados por conta própria. K-means clustering: agrupa dados similares em k grupos. Principal Component Analysis (PCA): reduz dimensionalidade preservando a estrutura. Exemplos: segmentar clientes por comportamento, detectar anomalias, comprimir dados.</div></div>
+            <div class="ti"><div class="tin">Reinforcement Learning — aprender por recompensa</div><div class="tid">Um agente toma ações em um ambiente e recebe recompensas/penalidades. O objetivo é maximizar a recompensa total ao longo do tempo. AlphaGo (Go), AlphaFold (dobragem de proteínas), bots de jogos (Atari, DOTA 2) e sistemas de recomendação usam RL. É como treinar um animal — feedback positivo/negativo.</div></div>
+            <div class="ti"><div class="tin">Overfitting vs Underfitting</div><div class="tid">Overfitting: modelo "decora" os dados de treino mas generaliza mal (desempenho alto no treino, baixo no teste). Como estudar as respostas sem entender o conteúdo. Underfitting: modelo muito simples não captura os padrões. Solução: regularização, dropout, mais dados, validação cruzada para medir generalização.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tib">σ</div><h4>Redes Neurais</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">O neurônio artificial</div><div class="tid">Recebe inputs (x₁, x₂...), cada um com um peso (w₁, w₂...). Calcula a soma ponderada + bias: z = Σ(wᵢ × xᵢ) + b. Passa pela função de ativação (ReLU, sigmoid, tanh) para introduzir não-linearidade. Sem ativação, uma rede com N camadas seria equivalente a uma rede com 1 camada.</div></div>
+            <div class="ti"><div class="tin">Backpropagation — como a rede aprende</div><div class="tid">Calcule o erro na saída (loss function). Use a regra da cadeia do cálculo para propagar o gradiente do erro de volta por cada camada. Atualize os pesos na direção que reduz o erro (gradient descent). Repita com milhares de exemplos. Cada "epoch" de treinamento reduz o erro um pouco.</div></div>
+            <div class="ti"><div class="tin">CNNs — visão computacional</div><div class="tid">Convolutional Neural Networks processam imagens eficientemente. Filtros convolucionais detectam features locais: bordas, texturas, formas. Camadas de pooling reduzem dimensionalidade. Stacking de camadas detecta features cada vez mais abstratas: pixels → bordas → formas → objetos → cenas. Base do reconhecimento facial e classificação de imagens.</div></div>
+            <div class="ti"><div class="tin">Transformers — a arquitetura moderna</div><div class="tid">Introduzida no paper "Attention Is All You Need" (2017, Google). O mecanismo de atenção permite que cada token "atenda" a qualquer outro token na sequência — capturando dependências de longo alcance. GPT, BERT, Claude, e praticamente todos os LLMs modernos são baseados em Transformers. Revolucionou NLP e se expandiu para imagens e vídeo.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tblock">
+      <div class="tsec">Generative AI e Ética</div>
+      <div class="tgrid">
+        <div class="tc">
+          <div class="tch"><div class="tico tig">💬</div><h4>Large Language Models</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Como LLMs funcionam</div><div class="tid">LLMs são treinados para prever o próximo token (pedaço de palavra) dado o contexto anterior. Com bilhões de parâmetros e trilhões de tokens de treinamento, emergem capacidades surpreendentes: raciocínio, código, tradução, análise. O modelo não "sabe" nada — ele estatisticamente modela padrões de linguagem humana em enorme escala.</div></div>
+            <div class="ti"><div class="tin">Tokenização</div><div class="tid">LLMs não processam caracteres ou palavras — processam tokens. Um token é ~4 caracteres em inglês (~3 em português). "ChatGPT is great!" = ["Chat", "G", "PT", " is", " great", "!"]. Por isso, problemas com anagramas, contagem de letras e reversão de strings são difíceis para LLMs — operam sobre tokens, não caracteres.</div></div>
+            <div class="ti"><div class="tin">Engenharia de Prompt</div><div class="tid">A qualidade do output depende da qualidade do prompt. Técnicas: Chain-of-Thought ("pense passo a passo"), Few-shot (dar exemplos), Role prompting ("você é um especialista em..."), System prompts (instrução persistente). Prompts claros, específicos e com contexto relevante produzem resultados muito melhores.</div></div>
+            <div class="ti"><div class="tin">RAG — Retrieval Augmented Generation</div><div class="tid">LLMs têm "corte de conhecimento" — não sabem de eventos recentes. RAG resolve: antes de gerar, busque documentos relevantes numa base de dados vetorial, inclua-os no contexto. O modelo gera baseado nos documentos recuperados. Base de chatbots corporativos que respondem sobre documentos internos da empresa.</div></div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tch"><div class="tico tia">⚠</div><h4>Ética e Impacto Social</h4></div>
+          <div class="titems">
+            <div class="ti"><div class="tin">Bias algorítmico</div><div class="tid">Modelos aprendem padrões dos dados de treinamento — incluindo os preconceitos humanos. COMPAS (sistema de previsão de reincidência criminal nos EUA) mostrava viés racial. Sistemas de reconhecimento facial têm taxas de erro significativamente maiores para mulheres de pele escura. Dados históricos codificam inequidades históricas.</div></div>
+            <div class="ti"><div class="tin">Privacidade e dados de treinamento</div><div class="tid">LLMs são treinados em grandes partes da internet — incluindo dados que pessoas não consentiram explicitamente. Modelos podem vazar informações de treinamento se questionados de certa forma (memorization). GDPR e leis de privacidade criam tensão com a necessidade de grandes datasets. "Right to be forgotten" se torna tecnicamente complexo.</div></div>
+            <div class="ti"><div class="tin">Deepfakes e desinformação</div><div class="tid">Modelos generativos criam imagens, vídeos e áudios fotorrealistas de pessoas dizendo/fazendo coisas que nunca aconteceram. Custo de criar desinformação caiu drasticamente. Detecção está permanentemente atrás da geração. Impacto em eleições, processos judiciais, reputação pessoal. Watermarking e detecção de conteúdo sintético são pesquisas ativas.</div></div>
+            <div class="ti"><div class="tin">AI Safety — alinhamento de objetivos</div><div class="tid">Sistemas otimizando objetivos mal especificados podem se comportar de formas inesperadas e prejudiciais. O problema de alinhamento: como garantir que sistemas de IA poderosos façam o que realmente queremos, não apenas o que tecnicamente especificamos? RLHF (Reinforcement Learning from Human Feedback) é a abordagem atual — imperfeita mas funcional.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cb">
+      <div class="cbh"><span class="cbl">Python</span><span class="cbt">ml_classificador.py — scikit-learn</span></div>
+      <pre><code><span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> train_test_split
+<span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> RandomForestClassifier
+<span class="kw">from</span> sklearn.metrics <span class="kw">import</span> accuracy_score, classification_report
+<span class="kw">from</span> sklearn.preprocessing <span class="kw">import</span> StandardScaler
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+<span class="cm"># Carregar dataset</span>
+df = pd.<span class="fn">read_csv</span>(<span class="str">"dados.csv"</span>)
+X = df.<span class="fn">drop</span>(<span class="str">"target"</span>, axis=<span class="num">1</span>)  <span class="cm"># features</span>
+y = df[<span class="str">"target"</span>]                <span class="cm"># labels</span>
+
+<span class="cm"># Dividir: 80% treino, 20% teste</span>
+X_train, X_test, y_train, y_test = <span class="fn">train_test_split</span>(
+    X, y, test_size=<span class="num">0.2</span>, random_state=<span class="num">42</span>, stratify=y
+)
+
+<span class="cm"># Normalizar features (média=0, desvio=1)</span>
+scaler = <span class="fn">StandardScaler</span>()
+X_train = scaler.<span class="fn">fit_transform</span>(X_train)  <span class="cm"># aprende a escala</span>
+X_test = scaler.<span class="fn">transform</span>(X_test)         <span class="cm"># aplica sem aprender</span>
+
+<span class="cm"># Treinar modelo</span>
+modelo = <span class="fn">RandomForestClassifier</span>(n_estimators=<span class="num">100</span>, random_state=<span class="num">42</span>)
+modelo.<span class="fn">fit</span>(X_train, y_train)
+
+<span class="cm"># Avaliar</span>
+y_pred = modelo.<span class="fn">predict</span>(X_test)
+<span class="fn">print</span>(<span class="str">f"Acurácia: {<span class="fn">accuracy_score</span>(y_test, y_pred)*<span class="num">100</span>:.1f}%"</span>)
+<span class="fn">print</span>(<span class="fn">classification_report</span>(y_test, y_pred))
+
+<span class="cm"># Integrar LLM via API (Anthropic Claude)</span>
+<span class="kw">import</span> anthropic
+client = anthropic.<span class="fn">Anthropic</span>()
+msg = client.messages.<span class="fn">create</span>(
+    model=<span class="str">"claude-sonnet-4-20250514"</span>,
+    max_tokens=<span class="num">500</span>,
+    messages=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"Explique overfitting em 2 linhas"</span>}]
+)
+<span class="fn">print</span>(msg.content[<span class="num">0</span>].text)</code></pre>
+    </div>
+
+    <div class="ex"><h4>Exercícios Práticos — Semana 10</h4>
+      <div class="exl">
+        <div class="ei"><div class="en">01</div><div class="et"><strong>Classificador de imagens:</strong> Use TensorFlow/Keras para treinar uma CNN simples no dataset MNIST (dígitos 0-9 escritos à mão). Alcance pelo menos 98% de acurácia e visualize os erros do modelo.</div></div>
+        <div class="ei"><div class="en">02</div><div class="et"><strong>Integração LLM:</strong> Adicione um chatbot à sua aplicação Flask usando a API de um LLM. Implemente histórico de conversa, prompt de sistema customizado e limite de tokens para controlar custos.</div></div>
+        <div class="ei"><div class="en">03</div><div class="et"><strong>Análise de bias:</strong> Baixe um dataset público de decisões (ex: crédito, contratação). Analise com pandas se há disparidade de resultados por grupos demográficos. Quantifique e visualize o bias encontrado.</div></div>
+        <div class="ei"><div class="en">04</div><div class="et"><strong>Ensaio ético:</strong> Escolha um sistema de IA atual (reconhecimento facial em aeroportos, moderação de conteúdo, scoring de crédito). Escreva 500 palavras: benefícios, riscos, quem é impactado e como regulamentá-lo responsavelmente.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div><!-- end weeks -->
+
+  <!-- PROJETO FINAL -->
+  <div id="final">
+    <div class="sh"><div class="st">Conclusão do curso</div><div class="si">Projeto Final</div></div>
+    <div class="fw">
+      <h2>Seu próprio software, do zero</h2>
+      <p>O projeto final é a culminação de tudo. Não há tema obrigatório — apenas a exigência de que seja original, funcional e represente uma contribuição genuína. Você deve criar algo do zero, resolver um problema real e ser capaz de demonstrá-lo e explicá-lo. A liberdade é total, e isso é intencional: aprenda a definir escopo, tomar decisões técnicas e entregar um produto completo.</p>
+      <div class="fg">
+        <div class="fi">
+          <h4>Requisitos Mínimos</h4>
+          <p>O projeto deve demonstrar domínio de pelo menos duas tecnologias do curso. Deve ser documentado com README explicando propósito, decisões técnicas e como executar.</p>
+          <ul>
+            <li>Código original, não adaptação de tutorial</li>
+            <li>README com setup e instruções</li>
+            <li>Pelo menos 2 linguagens/tecnologias do curso</li>
+            <li>Funcionar sem erros na demonstração</li>
+          </ul>
+        </div>
+        <div class="fi">
+          <h4>Entregáveis</h4>
+          <p>Um vídeo de 1-2 minutos demonstrando o projeto em funcionamento. Explicar o problema, as tecnologias e os principais desafios. Submeter o código no GitHub.</p>
+          <ul>
+            <li>Vídeo demo de 1-2 minutos (screencast)</li>
+            <li>Repositório GitHub com todo o código</li>
+            <li>README detalhado (mínimo 500 palavras)</li>
+            <li>Comentários no código nos pontos críticos</li>
+          </ul>
+        </div>
+        <div class="fi">
+          <h4>Ideias de Projetos</h4>
+          <p>A melhor ideia é aquela que resolve um problema seu. Pense no que você gostaria que existisse.</p>
+          <ul>
+            <li>App web Flask + SQL + autenticação</li>
+            <li>Jogo em JavaScript com placar online</li>
+            <li>Ferramenta CLI para automação pessoal</li>
+            <li>Chatbot com integração de LLM</li>
+            <li>Dashboard de análise de dados pessoais</li>
+            <li>API REST para um serviço útil</li>
+            <li>Extensão de navegador</li>
+            <li>Aplicativo mobile com React Native</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end page -->
+
+<div style="text-align:center;padding:48px 2rem;border-top:1px solid rgba(255,255,255,.06);color:var(--t3);font-family:var(--mono);font-size:11px;line-height:1.8;">
+  CS50 — Produzido por Mikaele Neres · Ordinária-Tech · 2026<br>
+  Este documento cobre 11 semanas, 88 tópicos desenvolvidos e 40+ exemplos de código
+</div>
+
+<script>
+function tog(h) {
+  const card = h.parentElement;
+  card.classList.toggle('open');
+  if (card.classList.contains('open')) {
+    setTimeout(() => card.scrollIntoView({behavior:'smooth',block:'nearest'}), 50);
+  }
+}
+</script>
+</body>
+</html>
